@@ -17,6 +17,7 @@ from pytorch_lightning import seed_everything
 from argparse import ArgumentParser
 
 from datasets import CLEVR, CLEVRTEX
+from torchvision.datasets import CelebA
 from models import SlotAttentionAE
 
 # ------------------------------------------------------------
@@ -75,7 +76,7 @@ seed_everything(args.seed, workers=True)
 dataset = args.dataset
 train_dataset, val_dataset = None, None
 
-if dataset == 'clevr':
+if dataset == 'clevr' or dataset == 'clevr-mirror':
     train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
                           scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
                           max_objs=6)
@@ -102,6 +103,11 @@ elif dataset == 'clevr-tex':
         resize=(128, 128),
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
+elif dataset == 'celeba':
+    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=None,
+                           target_transform=None, download=True)
+    val_dataset = CelebA(root=args.train_path, split='val', target_type='attr', transform=None,
+                           target_transform=None, download=True)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True)
