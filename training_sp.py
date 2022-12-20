@@ -17,7 +17,7 @@ from pytorch_lightning import seed_everything
 
 from argparse import ArgumentParser
 
-from datasets import CLEVR
+from datasets import CLEVR, CLEVRTEX
 from models import QuantizedClassifier
 from models import SlotAttentionAE
 
@@ -39,6 +39,7 @@ program_parser.add_argument("--log_model", default=True)
 
 # dataset parameters
 program_parser.add_argument("--train_path", type=str)
+program_parser.add_argument("--dataset", type=str)
 
 # Experiment parameters
 program_parser.add_argument("--batch_size", type=int, default=2)
@@ -74,15 +75,36 @@ seed_everything(args.seed, workers=True)
 # ------------------------------------------------------------
 # Load dataset
 # ------------------------------------------------------------
+dataset = args.dataset
+train_dataset, val_dataset = None, None
 
+if dataset == 'clevr':
+    train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
+                          scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
+                          max_objs=10)
 
-train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
-                      scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
-                      max_objs=10)
+    val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
+                        scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
+                        max_objs=10)
+elif dataset == 'clevr-tex':
+    # TO-DO: SPECIFY THE AMOUNT OF OBJECTS LIKE DONE ABOVE
+    train_dataset = CLEVRTEX(
+        args.train_path, # Untar'ed
+        dataset_variant='full', # 'full' for main CLEVRTEX, 'outd' for OOD, 'pbg','vbg','grassbg','camo' for variants.
+        split='train',
+        crop=True,
+        resize=(128, 128),
+        return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
+    )
 
-val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
-                    scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
-                    max_objs=10)
+    val_dataset = CLEVRTEX(
+        args.train_path, # Untar'ed
+        dataset_variant='full', # 'full' for main CLEVRTEX, 'outd' for OOD, 'pbg','vbg','grassbg','camo' for variants.
+        split='val',
+        crop=True,
+        resize=(128, 128),
+        return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
+    )
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True)
