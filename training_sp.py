@@ -43,6 +43,7 @@ program_parser.add_argument("--train_path", type=str)
 program_parser.add_argument("--dataset", type=str)
 
 # Experiment parameters
+program_parser.add_argument("--device", default='gpu')
 program_parser.add_argument("--batch_size", type=int, default=2)
 program_parser.add_argument("--from_checkpoint", type=str, default='')
 program_parser.add_argument("--ckpt_test", type=str, default=None)
@@ -163,10 +164,12 @@ callbacks = [
 # ------------------------------------------------------------
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
-gpus = [args.gpus]
+accelerator = args.device
+devices = [int(args.devices)]
 
 # trainer
-trainer = pl.Trainer(gpus=gpus,
+trainer = pl.Trainer(accelerator=accelerator,
+                     devices=[0],
                      max_epochs=args.max_epochs,
                      profiler=profiler,
                      callbacks=callbacks,

@@ -41,6 +41,7 @@ program_parser.add_argument("--train_path", type=str)
 program_parser.add_argument("--dataset", type=str)
 
 # Experiment parameters
+program_parser.add_argument("--device", default='gpu')
 program_parser.add_argument("--batch_size", type=int, default=64)
 program_parser.add_argument("--from_checkpoint", type=str, default='')
 program_parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -161,11 +162,11 @@ autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 # ------------------------------------------------------------
 # trainer parameters
 profiler = None  # 'simple'/'advanced'/None
-accelerator = 'gpu'
+accelerator = args.device
 devices = [int(args.devices)]
 
 # trainer
-trainer = pl.Trainer(accelerator='gpu',
+trainer = pl.Trainer(accelerator=accelerator,
                      devices=[0],
                      max_epochs=args.max_epochs,
                      profiler=profiler,
