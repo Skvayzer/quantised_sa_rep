@@ -111,11 +111,14 @@ elif dataset == 'clevr-tex':
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
 elif dataset == 'celeba':
-    transform = torchvision.transforms.Resize((128, 128))
-    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transform,
-                           target_transform=transform, download=True)
-    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transform,
-                         target_transform=transform, download=True)
+    transforms = torchvision.transforms.Compose([
+        torchvision.transforms.Resize((128, 128)),
+        torchvision.transforms.ToTensor()
+    ])
+    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
+                           target_transform=transforms, download=True)
+    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
+                         target_transform=transforms, download=True)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True)
