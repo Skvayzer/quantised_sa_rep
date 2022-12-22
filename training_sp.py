@@ -114,7 +114,7 @@ elif dataset == 'celeba':
     transform = torchvision.transforms.Resize((128, 128))
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transform,
                            target_transform=transform, download=True)
-    val_dataset = CelebA(root=args.train_path, split='val', target_type='attr', transform=transform,
+    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transform,
                          target_transform=transform, download=True)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
@@ -134,9 +134,9 @@ if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
     autoencoder.load_from_checkpoint(args.sa_state_dict)
 
-project_name = 'set_prediction_CLEVR'
+project_name = 'set_prediction_' + dataset
 
-wandb_logger = WandbLogger(project='set_prediction_CLEVR', name=f'nums {args.nums!r} s {args.seed}', log_model=True)
+wandb_logger = WandbLogger(project=project_name, name=f'nums {args.nums!r} s {args.seed}', log_model=True)
 
 # ------------------------------------------------------------
 # Callbacks
@@ -169,11 +169,11 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 accelerator = args.device
-devices = [int(args.devices)]
+# devices = [int(args.devices)]
 
 # trainer
 trainer = pl.Trainer(accelerator=accelerator,
-                     devices=[0],
+                     # devices=[0],
                      max_epochs=args.max_epochs,
                      profiler=profiler,
                      callbacks=callbacks,
