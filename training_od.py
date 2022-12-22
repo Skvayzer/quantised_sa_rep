@@ -2,6 +2,8 @@ import os
 import random
 import sys
 
+import torchvision.transforms
+
 sys.path.append("..")
 
 import numpy as np
@@ -105,10 +107,11 @@ elif dataset == 'clevr-tex':
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
 elif dataset == 'celeba':
-    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=None,
-                           target_transform=None, download=True)
-    val_dataset = CelebA(root=args.train_path, split='val', target_type='attr', transform=None,
-                           target_transform=None, download=True)
+    transform = torchvision.transforms.Resize((128, 128))
+    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transform,
+                           target_transform=transform, download=True)
+    val_dataset = CelebA(root=args.train_path, split='val', target_type='attr', transform=transform,
+                           target_transform=transform, download=True)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True)
