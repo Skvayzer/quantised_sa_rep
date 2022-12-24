@@ -22,7 +22,9 @@ singularity exec instance://ml_env /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa/;
-      python3 ./quantized_sa_rep/training_od.py --dataset 'clevr-tex' --device 'gpu' --max_epochs 442 --batch_size 512 --train_path "/home/quantized_sa/datasets/clevr-tex" --seed 0 --nums 8 8 8 8 --num_workers 2 ;
+      pwd;
+      ls;
+      python3 quantized_sa_rep/training_od.py --dataset 'clevr-tex' --device 'gpu' --max_epochs 442 --batch_size 512 --train_path "/home/quantized_sa/datasets/clevr-tex" --seed 0 --nums 8 8 8 8 --num_workers 2 ;
       free -m;
 " > output.txt
 
