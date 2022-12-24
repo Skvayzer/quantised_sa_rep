@@ -18,6 +18,7 @@ singularity instance start \
 singularity exec instance://ml_env /bin/bash -c "
       source /miniconda/etc/profile.d/conda.sh;
       conda activate ml_env;
+      conda update -n base -c defaults conda;
       conda config --add channels conda-forge;
       conda install sklearn;
       conda install scipy;
