@@ -21,6 +21,7 @@ from argparse import ArgumentParser
 from datasets import CLEVR, CLEVRTEX
 from torchvision.datasets import CelebA
 from models import SlotAttentionAE
+import wandb
 
 # ------------------------------------------------------------
 # Constants
@@ -130,7 +131,7 @@ dict_args = vars(args)
 
 autoencoder = SlotAttentionAE(**dict_args)
 
-project_name = 'set_prediction_' + dataset
+project_name = 'object_detection_' + dataset
 
 wandb_logger = WandbLogger(project=project_name, name=f'nums {args.nums!r} s {args.seed} kl {args.beta}',
                            log_model=True)
@@ -169,11 +170,11 @@ autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 # trainer parameters
 profiler = None  # 'simple'/'advanced'/None
 accelerator = args.device
-# devices = [int(args.devices)]
+devices = [int(args.devices)]
 
 # trainer
 trainer = pl.Trainer(accelerator=accelerator,
-                     # devices=[0],
+                     devices=[0],
                      max_epochs=args.max_epochs,
                      profiler=profiler,
                      callbacks=callbacks,
@@ -189,3 +190,4 @@ if not len(args.from_checkpoint):
 trainer.fit(autoencoder, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=args.from_checkpoint)
 # Test
 trainer.test(dataloaders=val_loader, ckpt_path=None)
+wandb.finish()

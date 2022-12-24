@@ -24,6 +24,7 @@ from datasets import CLEVR, CLEVRTEX
 from torchvision.datasets import CelebA
 from models import QuantizedClassifier
 from models import SlotAttentionAE
+import wandb
 
 # ------------------------------------------------------------
 # Constants
@@ -172,11 +173,11 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 accelerator = args.device
-# devices = [int(args.devices)]
+devices = [int(args.devices)]
 
 # trainer
 trainer = pl.Trainer(accelerator=accelerator,
-                     # devices=[0],
+                     devices=[0],
                      max_epochs=args.max_epochs,
                      profiler=profiler,
                      callbacks=callbacks,
@@ -192,3 +193,4 @@ trainer.fit(autoencoder, train_dataloaders=train_loader, val_dataloaders=val_loa
 # Test
 
 trainer.test(dataloaders=val_loader, ckpt_path=None)
+wandb.finish()
