@@ -171,10 +171,10 @@ autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 profiler = None  # 'simple'/'advanced'/None
 accelerator = args.device
 # devices = [int(args.devices)]
+gpus = [args.gpus]
 
 # trainer
-trainer = pl.Trainer(accelerator=accelerator,
-                     devices=[0],
+trainer = pl.Trainer(gpus=gpus,
                      max_epochs=args.max_epochs,
                      profiler=profiler,
                      callbacks=callbacks,
