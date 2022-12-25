@@ -95,9 +95,12 @@ class SlotAttentionAE(pl.LightningModule):
 
     def step(self, batch):
         imgs = batch['image']
+
         result, _, kl_loss = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
+
+
 
     def training_step(self, batch, batch_idx):
         optimizer = self.optimizers()
@@ -105,8 +108,11 @@ class SlotAttentionAE(pl.LightningModule):
         optimizer = optimizer.optimizer
 
         loss, kl_loss = self.step(batch)
+        ari = 0
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
+
+
 
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()

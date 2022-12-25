@@ -9,7 +9,7 @@ from math import exp
 
 from modules import Encoder, PosEmbeds, CoordQuantizer
 from modules.slot_attention import SlotAttentionBase
-from utils import spatial_flatten, hungarian_huber_loss, average_precision_clevr
+from utils import spatial_flatten, hungarian_huber_loss, Evaluator
 
 
 class QuantizedClassifier(pl.LightningModule):
@@ -105,6 +105,7 @@ class QuantizedClassifier(pl.LightningModule):
 
         metrics = {
             'loss': loss,
+
             # 'log_likelihood': result['log_likelihood'],
             # 'qunatizer loss': quant_loss,
             # 'inner sim loss': sim_loss,
@@ -116,7 +117,7 @@ class QuantizedClassifier(pl.LightningModule):
         if mode == 'Train' or mode == 'Validation':
             if batch_idx == 1:
                 ap_metrics = {
-                    f'ap thr={thr}': average_precision_clevr(
+                    f'ap thr={thr}': Evaluator.average_precision_clevr(
                         result['prediction'].detach().cpu().numpy(),
                         targets.detach().cpu().numpy(),
                         thr
@@ -125,7 +126,7 @@ class QuantizedClassifier(pl.LightningModule):
                 }
         elif mode == 'Test':
             ap_metrics = {
-                f'ap thr={thr}': average_precision_clevr(
+                f'ap thr={thr}': Evaluator.average_precision_clevr(
                     result['prediction'].detach().cpu().numpy(),
                     targets.detach().cpu().numpy(),
                     thr
