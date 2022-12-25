@@ -170,7 +170,7 @@ autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 # trainer parameters
 profiler = None  # 'simple'/'advanced'/None
 accelerator = args.device
-devices = [int(args.devices)]
+# devices = [int(args.devices)]
 
 # trainer
 trainer = pl.Trainer(accelerator=accelerator,

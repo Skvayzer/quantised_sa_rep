@@ -174,7 +174,7 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 accelerator = args.device
-devices = [int(args.devices)]
+# devices = [int(args.devices)]
 
 # trainer
 trainer = pl.Trainer(accelerator=accelerator,
