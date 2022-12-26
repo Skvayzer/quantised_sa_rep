@@ -16,7 +16,7 @@
 singularity instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
-                     --env WANDB_API_KEY c84312b58e94070d15277f8a5d58bb72e57be7fd \
+                     --env WANDB_API_KEY=c84312b58e94070d15277f8a5d58bb72e57be7fd \
                      ml_env.sif ml_env
 
 singularity exec instance://ml_env /bin/bash -c "
