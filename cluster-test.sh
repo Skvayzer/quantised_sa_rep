@@ -13,12 +13,13 @@
 #SBATCH --mail-type=END
 #SBATCH --comment="Обучение нейросетевой модели в рамках НИР Центра когнитивного моделирования"
 
-singularity instance start \
+apptainer instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
+                     --cleanenv       
                      ml_env.sif ml_env
 
-singularity exec instance://ml_env /bin/bash -c "
+apptainer exec instance://ml_env /bin/bash -c "
       source /miniconda/etc/profile.d/conda.sh;
       conda activate ml_env;
       EXPORT WANDB_API_KEY=c84312b58e94070d15277f8a5d58bb72e57be7fd;
@@ -30,4 +31,4 @@ singularity exec instance://ml_env /bin/bash -c "
       free -m;
 ";
 
-singularity instance stop ml_env
+apptainer instance stop ml_env
