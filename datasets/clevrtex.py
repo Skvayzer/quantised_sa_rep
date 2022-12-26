@@ -174,8 +174,14 @@ class CLEVRTEX:
             img = img.resize(self.resize, resample=Image.BILINEAR)
             msk = msk.resize(self.resize, resample=Image.NEAREST)
 
-        img = Ft.to_tensor(np.array(img)[..., :3])
-        msk = torch.from_numpy(np.array(msk))[None]
+        image = Ft.to_tensor(np.array(img)[..., :3])
+        mask = torch.from_numpy(np.array(msk))[None]
+
+        img.close()
+        msk.close()
+
+        img = image
+        msk = mask
 
         ret = (ind, img, msk)
 
@@ -183,10 +189,8 @@ class CLEVRTEX:
             with self.metadata_index[ind].open('r') as inf:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
-            inf.close()
         batch = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
         return batch
-
 
 def collate_fn(batch):
     # return (
