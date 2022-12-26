@@ -96,7 +96,7 @@ class SlotAttentionAE(pl.LightningModule):
 
     def step(self, batch):
         a = 'A'*1000
-        print(a, "BATCH LEN", len(batch), file=sys.stderr)
+        sys.stderr.write(a + "BATCH LEN" + str(len(batch)))
         imgs = batch['image']
 
         result, _, kl_loss = self(imgs)
