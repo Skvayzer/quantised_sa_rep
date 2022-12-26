@@ -25,6 +25,7 @@ from torchvision.datasets import CelebA
 from models import QuantizedClassifier
 from models import SlotAttentionAE
 import wandb
+from datasets import collate_fn
 
 # ------------------------------------------------------------
 # Constants
@@ -84,6 +85,7 @@ wandb.login(key='c84312b58e94070d15277f8a5d58bb72e57be7fd')
 # ------------------------------------------------------------
 dataset = args.dataset
 train_dataset, val_dataset = None, None
+collatation = None
 
 if dataset == 'clevr' or dataset == 'clevr-mirror':
     train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
@@ -112,6 +114,8 @@ elif dataset == 'clevr-tex':
         resize=(128, 128),
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
+    collation = collate_fn
+
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
         torchvision.transforms.Resize((128, 128)),
@@ -123,9 +127,9 @@ elif dataset == 'celeba':
                          target_transform=transforms, download=True)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
-                          drop_last=True)
+                          drop_last=True, collate_fn=collation)
 val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False,
-                        drop_last=True)
+                        drop_last=True, collate_fn=collation)
 
 # ------------------------------------------------------------
 # Load model
