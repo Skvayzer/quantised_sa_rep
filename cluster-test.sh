@@ -23,6 +23,7 @@ singularity exec instance://ml_env /bin/bash -c "
       conda activate ml_env;
       export WANDB_API_KEY=c84312b58e94070d15277f8a5d58bb72e57be7fd;
       set -x;
+      ulimit -n 2048;
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
