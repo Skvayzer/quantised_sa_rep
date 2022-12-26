@@ -183,6 +183,7 @@ class CLEVRTEX:
             with self.metadata_index[ind].open('r') as inf:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
+            inf.close()
         batch = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
         return batch
 
