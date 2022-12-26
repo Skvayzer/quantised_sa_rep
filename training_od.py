@@ -171,7 +171,9 @@ autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 profiler = None  # 'simple'/'advanced'/None
 accelerator = args.device
 # devices = [int(args.devices)]
-gpus = [args.gpus]
+gpus = [0]
+
+print(torch.cuda.device_count())
 
 # trainer
 trainer = pl.Trainer(gpus=gpus,
