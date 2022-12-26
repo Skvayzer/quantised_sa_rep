@@ -94,6 +94,7 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss
 
     def step(self, batch):
+        print("BATCH LEN", len(batch), flush=True)
         imgs = batch['image']
 
         result, _, kl_loss = self(imgs)
