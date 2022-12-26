@@ -188,8 +188,18 @@ class CLEVRTEX:
 
 
 def collate_fn(batch):
-    return (
-        *torch.utils.data._utils.collate.default_collate([(b[0], b[1], b[2]) for b in batch]), [b[3] for b in batch])
+    # return (
+    #     *torch.utils.data._utils.collate.default_collate([(b[0], b[1], b[2]) for b in batch]), [b[3] for b in batch])
+    images = [b['image'] for b in batch]
+    masks = [b['mask'] for b in batch]
+    targets = [b['target'] for b in batch]
+    indexes = [b['index'] for b in batch]
+    return {
+        'image': images,
+        'mask': masks,
+        'target': targets,
+        'index': indexes
+    }
 
 
 
