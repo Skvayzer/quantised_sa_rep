@@ -16,7 +16,7 @@
 singularity instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
-                     --cleanenv
+                     --cleanenv \
                      ml_env.sif ml_env
 
 singularity exec instance://ml_env /bin/bash -c "
