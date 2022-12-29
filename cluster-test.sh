@@ -30,6 +30,6 @@ singularity exec instance://ml_env /bin/bash -c "
       cd /home/quantised_sa;
       python3 -u quantised_sa_rep/training_od.py --dataset 'clevr-tex' --device 'gpu' --max_epochs 442 --batch_size 128 --train_path "/home/quantised_sa/datasets/clevr-tex" --seed 0 --nums 8 8 8 8 --num_workers 4;
       free -m;
-";
+" > output.txt;
 
 singularity instance stop ml_env
