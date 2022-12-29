@@ -136,7 +136,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         if batch_idx == 0:
             imgs = batch['image'][:8]
-            true_masks = batch['masks']
+            true_masks = batch['mask']
             result, recons, _, pred_masks = self(imgs)
             self.log('ARI', Evaluator.ari(pred_masks, true_masks))
             self.trainer.logger.experiment.log({
