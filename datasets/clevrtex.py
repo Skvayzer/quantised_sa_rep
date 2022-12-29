@@ -199,8 +199,8 @@ def collate_fn(batch):
     # print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
     images = torch.stack([b['image'] for b in batch])
     masks = torch.stack([b['mask'] for b in batch])
-    targets = torch.stack([b['target'] for b in batch])
-    indexes = torch.stack([b['index'] for b in batch])
+    targets = []#torch.stack([b['target'] for b in batch])
+    indexes = []#torch.stack([b['index'] for b in batch])
 
     return {
         'image': images,
