@@ -70,6 +70,8 @@ class SlotAttentionAE(pl.LightningModule):
         self.save_hyperparameters()
 
     def forward(self, inputs):
+
+
         x = self.encoder(inputs)
         x = self.enc_emb(x)
 
@@ -95,10 +97,12 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss
 
     def step(self, batch):
-        a = 'A'*1000
+        a = 'A'*10
         sys.stderr.write(a + "BATCH LEN" + str(len(batch)))
-        imgs = batch['image']
+        print("aaa", file=sys.stderr, flush=True)
 
+        imgs = batch['image']
+        sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
         result, _, kl_loss = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
@@ -111,7 +115,7 @@ class SlotAttentionAE(pl.LightningModule):
         optimizer = optimizer.optimizer
 
         loss, kl_loss = self.step(batch)
-        ari = 0
+
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
 
