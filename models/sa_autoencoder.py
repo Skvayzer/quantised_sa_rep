@@ -135,7 +135,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         if batch_idx == 0:
             imgs = batch['image'][:8]
-            true_masks = batch['mask'][:8]
+            # true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
             # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
             # print("TRUE: ", true_masks, file=sys.stderr, flush=True)
