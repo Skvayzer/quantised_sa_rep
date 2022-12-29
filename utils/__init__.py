@@ -1,7 +1,7 @@
 from .spatial_utils import spatial_flatten, spatial_broadcast
 from .grid import build_grid
 from .loss_func import hungarian_huber_loss
-from .metrics import Evaluator, ari
+from .metrics import Evaluator, adjusted_rand_index
 
 
 __all__ = [
@@ -10,5 +10,5 @@ __all__ = [
     'build_grid', 
     'hungarian_huber_loss', 
     'Evaluator',
-    'ari'
+    'adjusted_rand_index'
     ]
