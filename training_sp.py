@@ -85,7 +85,7 @@ wandb.login(key='c84312b58e94070d15277f8a5d58bb72e57be7fd')
 # ------------------------------------------------------------
 dataset = args.dataset
 train_dataset, val_dataset = None, None
-collatation = None
+collation = None
 
 if dataset == 'clevr' or dataset == 'clevr-mirror':
     train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
