@@ -138,7 +138,7 @@ class SlotAttentionAE(pl.LightningModule):
             imgs = batch['image'][:8]
             true_masks = batch['mask']
             result, recons, _, pred_masks = self(imgs)
-            self.log('ARI', ari(pred_masks, true_masks))
+            # self.log('ARI', ari(pred_masks, true_masks))
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
