@@ -196,16 +196,16 @@ class CLEVRTEX:
 def collate_fn(batch):
     # return (
     #     *torch.utils.data._utils.collate.default_collate([(b[0], b[1], b[2]) for b in batch]), [b[3] for b in batch])
-    print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
-    images = torch.tensor([b['image'] for b in batch])
-    masks = torch.tensor([b['mask'] for b in batch])
-    targets = torch.tensor([b['target'] for b in batch])
-    indexes = torch.tensor([b['index'] for b in batch])
+    # print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
+    # images = torch.tensor([b['image'] for b in batch])
+    # masks = torch.tensor([b['mask'] for b in batch])
+    # targets = torch.tensor([b['target'] for b in batch])
+    # indexes = torch.tensor([b['index'] for b in batch])
     return {
-        'image': images,
-        'mask': masks,
-        'target': targets,
-        'index': indexes
+        'image': batch['image'],
+        'mask': batch['mask'],
+        'target': batch['target'],
+        'index': batch['index']
     }
 
 
