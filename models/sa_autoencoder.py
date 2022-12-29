@@ -11,7 +11,7 @@ from torch.optim import lr_scheduler
 
 from modules import Decoder, PosEmbeds, CoordQuantizer
 from modules.slot_attention import SlotAttentionBase
-from utils import spatial_broadcast, spatial_flatten, ari
+from utils import spatial_broadcast, spatial_flatten, adjusted_rand_index
 
 class SlotAttentionAE(pl.LightningModule):
     """
@@ -117,8 +117,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
-
-
+        print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
 
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()
@@ -139,7 +138,7 @@ class SlotAttentionAE(pl.LightningModule):
             true_masks = batch['mask']
             result, recons, _, pred_masks = self(imgs)
             print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-            self.log('ARI', ari(pred_masks, true_masks))
+            self.log('ARI', adjusted_rand_index(pred_masks, true_masks))
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
