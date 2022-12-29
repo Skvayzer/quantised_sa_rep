@@ -11,8 +11,7 @@ from torch.optim import lr_scheduler
 
 from modules import Decoder, PosEmbeds, CoordQuantizer
 from modules.slot_attention import SlotAttentionBase
-from utils import spatial_broadcast, spatial_flatten
-
+from utils import spatial_broadcast, spatial_flatten, Evaluator
 
 class SlotAttentionAE(pl.LightningModule):
     """
@@ -94,16 +93,16 @@ class SlotAttentionAE(pl.LightningModule):
         masks = F.softmax(masks, dim=1)
         recons = recons * masks
         result = torch.sum(recons, dim=1)
-        return result, recons, kl_loss
+        return result, recons, kl_loss, masks
 
     def step(self, batch):
-        a = 'A'*10
-        sys.stderr.write(a + "BATCH LEN" + str(len(batch)))
-        print("aaa", file=sys.stderr, flush=True)
+        # a = 'A'*10
+        # sys.stderr.write(a + "BATCH LEN" + str(len(batch)))
+        # print("aaa", file=sys.stderr, flush=True)
 
         imgs = batch['image']
-        sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
-        result, _, kl_loss = self(imgs)
+        # sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
+        result, _, kl_loss, _ = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
 
@@ -137,7 +136,9 @@ class SlotAttentionAE(pl.LightningModule):
 
         if batch_idx == 0:
             imgs = batch['image'][:8]
-            result, recons, _ = self(imgs)
+            true_masks = batch['masks']
+            result, recons, _, pred_masks = self(imgs)
+            self.log('ARI', Evaluator.ari(pred_masks, true_masks))
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
