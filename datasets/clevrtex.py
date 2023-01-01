@@ -182,11 +182,11 @@ class CLEVRTEX:
         msk.close()
 
         img = image
-        
-        msk = torch.empty(0, *img.shape)
+
+        msk = torch.empty(0, *img.shape[1:])
         max_object = torch.max(mask).item()
         for i in range(1, max_object + 1):
-            temp = mask[mask == i].int()
+            temp = mask.eq(i).int()
             torch.stack((msk, temp), dim=0)
 
 
