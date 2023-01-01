@@ -182,9 +182,16 @@ class CLEVRTEX:
         msk.close()
 
         img = image
-        msk = mask
+
+        msk = torch.empty(0, *img.shape)
+        max_object = max(mask)
+        for i in range(1, max_object + 1):
+            temp = mask[mask == i].int()
+            torch.stack((msk, temp), dim=0)
+
 
         ret = (ind, img, msk)
+
 
         if self.return_metadata:
             with self.metadata_index[ind].open('r') as inf:
@@ -198,6 +205,7 @@ def collate_fn(batch):
     #     *torch.utils.data._utils.collate.default_collate([(b[0], b[1], b[2]) for b in batch]), [b[3] for b in batch])
     # print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
     images = torch.stack([b['image'] for b in batch])
+    print("TRUE MASK SHAPE: ", batch[0]['mask'].shape, file=sys.stderr, flush=True)
     masks = torch.stack([b['mask'] for b in batch])
     targets = []#torch.stack([b['target'] for b in batch])
     indexes = []#torch.stack([b['index'] for b in batch])
