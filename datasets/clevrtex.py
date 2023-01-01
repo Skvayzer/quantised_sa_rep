@@ -187,7 +187,7 @@ class CLEVRTEX:
         max_object = torch.max(mask).item()
         for i in range(1, max_object + 1):
             temp = mask.eq(i).int()
-            torch.stack((msk, temp), dim=0)
+            torch.cat([msk, temp], dim=0)
 
 
         ret = (ind, img, msk)
