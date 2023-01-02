@@ -223,7 +223,7 @@ def collate_fn(batch):
     # print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
     images = torch.stack([b['image'] for b in batch])
     print("TRUE MASK SHAPE: ", batch[0]['mask'].shape, file=sys.stderr, flush=True)
-    masks = torch.nn.utils.rnn.pad_sequence([b['mask'] for b in batch])
+    masks = torch.nn.utils.rnn.pad_sequence([b['mask'] for b in batch], batch_first=True)
     print("MASK POSTPROCESS SHAPE: ", masks.shape, file=sys.stderr, flush=True)
 
     targets = []#torch.stack([b['target'] for b in batch])
