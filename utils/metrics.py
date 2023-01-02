@@ -64,7 +64,8 @@ def adjusted_rand_index(true_mask, pred_mask):
     n_pred_groups = pred_mask.shape[-1]
     print("ATTA ", n_points, n_true_groups, n_pred_groups, file=sys.stderr, flush=True)
 
-    assert not (n_points <= n_true_groups and n_points <= n_pred_groups), (
+    if not (n_points <= n_true_groups and n_points <= n_pred_groups):
+        raise ValueError(
         "adjusted_rand_index requires n_groups < n_points. We don't handle the special cases that can occur when you have one cluster per datapoint.")
 
     true_group_ids = torch.argmax(true_mask, -1)
