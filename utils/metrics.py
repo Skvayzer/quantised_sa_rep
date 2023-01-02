@@ -70,10 +70,10 @@ def adjusted_rand_index(true_mask, pred_mask):
 
     true_group_ids = torch.argmax(true_mask, -1)
     pred_group_ids = torch.argmax(pred_mask, -1)
-    true_mask_oh = true_mask.to(torch.float32)
-    pred_mask_oh = F.one_hot(pred_group_ids, n_pred_groups).to(torch.float32)
+    true_mask_oh = true_mask.float()
+    pred_mask_oh = F.one_hot(pred_group_ids, n_pred_groups).float()
 
-    n_points = torch.sum(true_mask_oh, dim=[1, 2]).to(torch.float32)
+    n_points = torch.sum(true_mask_oh, dim=[1, 2]).float()
 
     nij = torch.einsum('bji,bjk->bki', pred_mask_oh, true_mask_oh)
     a = torch.sum(nij, dim=1)
