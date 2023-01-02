@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_od_train
+#SBATCH --job-name=quantised_sa_od_clevr_tex1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -9,7 +9,7 @@
 ##SBATCH --gres=gpu:1
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-gpu=16GB
-#SBATCH --mail-user=korchemnyi.av@phystech.edu
+#SBATCH --mail-user=k.smirnov@innopolis.university
 #SBATCH --mail-type=END
 #SBATCH --comment="Обучение нейросетевой модели в рамках НИР Центра когнитивного моделирования"
 
