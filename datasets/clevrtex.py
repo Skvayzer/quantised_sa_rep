@@ -36,9 +36,9 @@ class CLEVRTEX:
     def _reindex(self):
         print(f'Indexing {self.basepath}')
 
-        img_index = {}
-        msk_index = {}
-        met_index = {}
+        img_index = []
+        msk_index = []
+        met_index = []
 
         prefix = f"CLEVRTEX_{self.dataset_variant}_"
 
@@ -66,20 +66,27 @@ class CLEVRTEX:
             if ind in img_index:
                 raise DatasetReadError(f"Duplica {ind}")
 
-            img_index[ind] = img_path
-            msk_index[ind] = msk_path
-            if self.return_metadata:
+            if self.return_metadata or self.max_obj != None:
                 if not met_path.exists():
                     raise DatasetReadError(f"Missing {met_path.name}")
-                met_index[ind] = met_path
+                with met_path.open('r') as inf:
+                    meta = json.load(inf)
+                if len(meta['objects']) > self.max_obj:
+                    continue
+                met_index.append(met_path)
             else:
-                met_index[ind] = None
+                met_index.append(None)
+
+            img_index.append(img_path)
+            msk_index.append(msk_path)
+
+
 
         if len(img_index) == 0:
             raise DatasetReadError(f"No values found")
-        missing = [i for i in range(0, _max) if i not in img_index]
-        if missing:
-            raise DatasetReadError(f"Missing images numbers {missing}")
+        # missing = [i for i in range(0, _max) if i not in img_index]
+        # if missing:
+        #     raise DatasetReadError(f"Missing images numbers {missing}")
 
         return img_index, msk_index, met_index
 
@@ -90,7 +97,7 @@ class CLEVRTEX:
                  path: Path,
                  dataset_variant='full',
                  split='train',
-                 max_obj=6,
+                 max_obj=None,
                  crop=True,
                  resize=(128, 128),
                  return_metadata=True):
@@ -201,13 +208,13 @@ class CLEVRTEX:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
         item = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
-        if len(item['target']['objects']) > self.max_obj:
-            del self.index[ind]
-            del self.mask_index[ind]
-            del self.metadata_index[ind]
-            return self.__getitem__(ind)
-        else:
-            return item
+        # if len(item['target']['objects']) > self.max_obj:
+        #     del self.index[ind]
+        #     del self.mask_index[ind]
+        #     del self.metadata_index[ind]
+        #     return self.__getitem__(ind)
+        # else:
+        return item
 
 def collate_fn(batch):
     # return (
