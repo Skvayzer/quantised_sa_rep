@@ -145,8 +145,8 @@ class SlotAttentionAE(pl.LightningModule):
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                'true_masks': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(true_masks, -1, 1)],
-                'pred_masks': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(pred_masks, -1, 1)]
+                'true_masks': [wandb.Image(x) for x in true_masks],
+                'pred_masks': [wandb.Image(x) for x in pred_masks]
             })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
