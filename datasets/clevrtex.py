@@ -66,13 +66,14 @@ class CLEVRTEX:
             if ind in img_index:
                 raise DatasetReadError(f"Duplica {ind}")
 
-            if self.return_metadata or self.max_obj != None:
+            if self.return_metadata:
                 if not met_path.exists():
                     raise DatasetReadError(f"Missing {met_path.name}")
-                with met_path.open('r') as inf:
-                    meta = json.load(inf)
-                if len(meta['objects']) > self.max_obj:
-                    continue
+                if self.max_obj != None:
+                    with met_path.open('r') as inf:
+                        meta = json.load(inf)
+                    if len(meta['objects']) > self.max_obj:
+                        continue
                 met_index.append(met_path)
             else:
                 met_index.append(None)
@@ -222,7 +223,7 @@ def collate_fn(batch):
     # print('BATCH INFO ', batch, type(batch), file=sys.stderr, flush=True)
     images = torch.stack([b['image'] for b in batch])
     print("TRUE MASK SHAPE: ", batch[0]['mask'].shape, file=sys.stderr, flush=True)
-    masks = torch.stack([b['mask'] for b in batch])
+    masks = torch.nn.utils.rnn.pad_sequence([b['mask'] for b in batch])
     targets = []#torch.stack([b['target'] for b in batch])
     indexes = []#torch.stack([b['index'] for b in batch])
 
