@@ -224,6 +224,8 @@ def collate_fn(batch):
     images = torch.stack([b['image'] for b in batch])
     print("TRUE MASK SHAPE: ", batch[0]['mask'].shape, file=sys.stderr, flush=True)
     masks = torch.nn.utils.rnn.pad_sequence([b['mask'] for b in batch])
+    print("MASK POSTPROCESS SHAPE: ", masks.shape, file=sys.stderr, flush=True)
+
     targets = []#torch.stack([b['target'] for b in batch])
     indexes = []#torch.stack([b['index'] for b in batch])
 
