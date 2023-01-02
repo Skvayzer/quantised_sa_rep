@@ -75,9 +75,9 @@ def adjusted_rand_index(true_mask, pred_mask):
 
     n_points = torch.sum(true_mask_oh, dim=[1, 2]).float()
 
-    nij = torch.einsum('bji,bjk->bki', pred_mask_oh, true_mask_oh)
-    a = torch.sum(nij, dim=1)
-    b = torch.sum(nij, dim=2)
+    nij = np.einsum('bji,bjk->bki', pred_mask_oh, true_mask_oh)
+    a = np.sum(nij, axis=1)
+    b = np.sum(nij, axis=2)
 
     rindex = torch.sum(nij * (nij - 1), dim=[1, 2])
     aindex = torch.sum(a * (a - 1), dim=1)
