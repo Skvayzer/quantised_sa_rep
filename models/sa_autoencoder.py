@@ -154,8 +154,8 @@ class SlotAttentionAE(pl.LightningModule):
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
             })
-            pred_masks = pred_masks.reshape(pred_masks.shape[:2], -1)
-            true_masks = true_masks.reshape(true_masks.shape[:2], -1)
+            pred_masks = pred_masks.reshape(pred_masks.shape[:2] + [-1])
+            true_masks = true_masks.reshape(true_masks.shape[:2] + [-1])
             print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
             self.log('ARI', adjusted_rand_index(pred_masks, true_masks))
         return loss
