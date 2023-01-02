@@ -57,14 +57,14 @@ def adjusted_rand_index(true_mask, pred_mask):
         http://scikit-learn.org/stable/modules/generated/\
         sklearn.metrics.adjusted_rand_score.html
     """
-    # true_mask = true_mask.permute(0, 2, 1)
-    # pred_mask = pred_mask.permute(0, 2, 1)
+    true_mask = true_mask.permute(0, 2, 1)
+    pred_mask = pred_mask.permute(0, 2, 1)
     print("ATTENTION! MASKS (true/pred): ", true_mask.shape, pred_mask.shape, file=sys.stderr, flush=True)
     _, n_points, n_true_groups = true_mask.shape
     n_pred_groups = pred_mask.shape[-1]
     print("ATTA ", n_points, n_true_groups, n_pred_groups, file=sys.stderr, flush=True)
 
-    if not (n_points <= n_true_groups and n_points <= n_pred_groups):
+    if (n_points <= n_true_groups and n_points <= n_pred_groups):
         raise ValueError(
         "adjusted_rand_index requires n_groups < n_points. We don't handle the special cases that can occur when you have one cluster per datapoint.")
 
@@ -91,24 +91,24 @@ def adjusted_rand_index(true_mask, pred_mask):
     return torch.where(both_single_cluster, torch.ones_like(ari), ari)
 
 
-# def ari(pred_mask, true_mask, skip_0=False):
-#     B = pred_mask.shape[0]
-#     pm = pred_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
-#     tm = true_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
-#     aris = []
-#     for bi in range(B):
-#         t = tm[bi]
-#         p = pm[bi]
-#         if skip_0:
-#             p = p[t > 0]
-#             t = t[t > 0]
-#         # adjusted_rand_score from sklearn
-#         ari_score = adjusted_rand_score(t, p)
-#         if ari_score != ari_score:
-#             print(f'NaN at bi')
-#         aris.append(ari_score)
-#     aris = torch.tensor(np.array(aris), device=pred_mask.device)
-#     return aris
+def ari(pred_mask, true_mask, skip_0=False):
+    B = pred_mask.shape[0]
+    pm = pred_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
+    tm = true_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
+    aris = []
+    for bi in range(B):
+        t = tm[bi]
+        p = pm[bi]
+        if skip_0:
+            p = p[t > 0]
+            t = t[t > 0]
+        # adjusted_rand_score from sklearn
+        ari_score = adjusted_rand_score(t, p)
+        if ari_score != ari_score:
+            print(f'NaN at bi')
+        aris.append(ari_score)
+    aris = torch.tensor(np.array(aris), device=pred_mask.device)
+    return aris
 
 
 def msc(pred_mask, true_mask):
