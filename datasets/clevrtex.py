@@ -52,6 +52,7 @@ class CLEVRTEX:
             msk_path = img_path.parent / f"{prefix}{indstr}{msk_suffix}"
             met_path = img_path.parent / f"{prefix}{indstr}{met_suffix}"
             indstr_stripped = indstr.lstrip('0')
+
             if indstr_stripped:
                 ind = int(indstr)
             else:
@@ -89,10 +90,12 @@ class CLEVRTEX:
                  path: Path,
                  dataset_variant='full',
                  split='train',
+                 max_obj=6,
                  crop=True,
                  resize=(128, 128),
                  return_metadata=True):
         self.return_metadata = return_metadata
+        self.max_obj = max_obj
         self.crop = crop
         self.resize = resize
         if dataset_variant not in self.variants:
@@ -197,8 +200,14 @@ class CLEVRTEX:
             with self.metadata_index[ind].open('r') as inf:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
-        batch = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
-        return batch
+        item = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
+        if len(item['ratget']['objects']) > self.max_obj:
+            del self.index[ind]
+            del self.mask_index[ind]
+            del self.metadata_index[ind]
+            return self.__getitem__(ind)
+        else:
+            return item
 
 def collate_fn(batch):
     # return (
