@@ -201,7 +201,7 @@ class CLEVRTEX:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
         item = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
-        if len(item['ratget']['objects']) > self.max_obj:
+        if len(item['target']['objects']) > self.max_obj:
             del self.index[ind]
             del self.mask_index[ind]
             del self.metadata_index[ind]
