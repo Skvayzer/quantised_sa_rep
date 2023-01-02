@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 
 # from scipy.optimize import linear_sum_assignment
-from sklearn.metrics import adjusted_rand_score
+# from sklearn.metrics import adjusted_rand_score
 
 
 class RunningMean:
@@ -86,29 +86,29 @@ def adjusted_rand_index(true_mask, pred_mask):
     max_rindex = (aindex + bindex) / 2
     ari = (rindex - expected_rindex) / (max_rindex - expected_rindex)
 
-    _all_equal = lambda values: torch.all(torch.equal(values, values[..., :1]), dim=-1)
+    _all_equal = lambda values: torch.all(torch.equal(values, values[..., :1]).int(), dim=-1)
     both_single_cluster = torch.logical_and(_all_equal(true_group_ids), _all_equal(pred_group_ids))
     return torch.where(both_single_cluster, torch.ones_like(ari), ari)
 
 
-def ari(pred_mask, true_mask, skip_0=False):
-    B = pred_mask.shape[0]
-    pm = pred_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
-    tm = true_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
-    aris = []
-    for bi in range(B):
-        t = tm[bi]
-        p = pm[bi]
-        if skip_0:
-            p = p[t > 0]
-            t = t[t > 0]
-        # adjusted_rand_score from sklearn
-        ari_score = adjusted_rand_score(t, p)
-        if ari_score != ari_score:
-            print(f'NaN at bi')
-        aris.append(ari_score)
-    aris = torch.tensor(np.array(aris), device=pred_mask.device)
-    return aris
+# def ari(pred_mask, true_mask, skip_0=False):
+#     B = pred_mask.shape[0]
+#     pm = pred_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
+#     tm = true_mask.argmax(axis=1).squeeze().view(B, -1).cpu().detach().numpy()
+#     aris = []
+#     for bi in range(B):
+#         t = tm[bi]
+#         p = pm[bi]
+#         if skip_0:
+#             p = p[t > 0]
+#             t = t[t > 0]
+#         # adjusted_rand_score from sklearn
+#         ari_score = adjusted_rand_score(t, p)
+#         if ari_score != ari_score:
+#             print(f'NaN at bi')
+#         aris.append(ari_score)
+#     aris = torch.tensor(np.array(aris), device=pred_mask.device)
+#     return aris
 
 
 def msc(pred_mask, true_mask):

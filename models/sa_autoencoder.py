@@ -11,7 +11,7 @@ from torch.optim import lr_scheduler
 
 from modules import Decoder, PosEmbeds, CoordQuantizer
 from modules.slot_attention import SlotAttentionBase
-from utils import spatial_broadcast, spatial_flatten, adjusted_rand_index, ari
+from utils import spatial_broadcast, spatial_flatten, adjusted_rand_index
 
 class SlotAttentionAE(pl.LightningModule):
     """
