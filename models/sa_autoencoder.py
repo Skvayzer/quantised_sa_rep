@@ -147,15 +147,15 @@ class SlotAttentionAE(pl.LightningModule):
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
-                # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
+                'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
+                'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
             })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
             })
-            pred_masks = pred_masks.reshape(pred_masks[:2], -1)
-            true_masks = true_masks.reshape(true_masks[:2], -1)
+            pred_masks = pred_masks.reshape(pred_masks.shape[:2], -1)
+            true_masks = true_masks.reshape(true_masks.shape[:2], -1)
             print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
             self.log('ARI', adjusted_rand_index(pred_masks, true_masks))
         return loss
