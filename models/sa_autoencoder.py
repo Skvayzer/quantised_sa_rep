@@ -138,6 +138,8 @@ class SlotAttentionAE(pl.LightningModule):
             print("img: ", imgs.shape, file=sys.stderr, flush=True)
             true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
+            pred_masks = torch.squeeze(pred_masks)
+
             print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
             print("TRUE: ", true_masks[true_masks > 0], file=sys.stderr, flush=True)
             print("PRED: ", pred_masks, file=sys.stderr, flush=True)
@@ -145,8 +147,8 @@ class SlotAttentionAE(pl.LightningModule):
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                'true_masks': [wandb.Image(x) for x in true_masks],
-                'pred_masks': [wandb.Image(x) for x in pred_masks]
+                'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
+                'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
             })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
