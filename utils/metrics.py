@@ -68,8 +68,8 @@ def adjusted_rand_index(true_mask, pred_mask):
         raise ValueError(
         "adjusted_rand_index requires n_groups < n_points. We don't handle the special cases that can occur when you have one cluster per datapoint.")
 
-    true_group_ids = torch.argmax(true_mask, -1).int()
-    pred_group_ids = torch.argmax(pred_mask, -1).int()
+    true_group_ids = torch.argmax(true_mask, -1)
+    pred_group_ids = torch.argmax(pred_mask, -1)
     true_mask_oh = true_mask.float()
     pred_mask_oh = F.one_hot(pred_group_ids, n_pred_groups).float()
 
@@ -86,7 +86,7 @@ def adjusted_rand_index(true_mask, pred_mask):
     max_rindex = (aindex + bindex) / 2
     ari = (rindex - expected_rindex) / (max_rindex - expected_rindex)
 
-    _all_equal = lambda values: torch.all(torch.equal(values, values[..., :1]).int(), dim=-1)
+    _all_equal = lambda values: torch.all(torch.eq(values, values[..., :1]), dim=-1)
     both_single_cluster = torch.logical_and(_all_equal(true_group_ids), _all_equal(pred_group_ids))
     return torch.where(both_single_cluster, torch.ones_like(ari), ari)
 
