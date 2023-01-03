@@ -157,7 +157,7 @@ class SlotAttentionAE(pl.LightningModule):
             pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
             true_masks = true_masks.view(*true_masks.shape[:2], -1)
             print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-            self.log('ARI', adjusted_rand_index(torch.ones((8, 7, 16384)).float().cpu(), pred_masks.float().cpu()))
+            self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
     def validation_epoch_end(self, outputdata):
