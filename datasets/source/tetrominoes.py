@@ -75,7 +75,7 @@ data_dict = {'train': 60_000,
              'test': 15_000}
 
 dataset_name = 'tetrominoes'
-current_dir = os.path.dirname(os.path.realpath(__file__))
+save_dir = '/home/quantised_sa/datasets/multi_objects'
 dataset_path = 'source/tetrominoes_train.tfrecords'
 ds = dataset(dataset_path)
 ds_iter = iter(ds)
@@ -90,6 +90,6 @@ for name, l in data_dict.items():
     masks[i] = d['mask'].numpy().transpose(0, 3, 1, 2)
     visibility[i] = d['visibility'].numpy()
 
-  np.savez(os.path.join(current_dir, dataset_name, dataset_name + '_' +  name), images=images, masks=masks, visibility=visibility)
+  np.savez(os.path.join(save_dir, dataset_name, dataset_name + '_' +  name), images=images, masks=masks, visibility=visibility)
 
 print("Done")
