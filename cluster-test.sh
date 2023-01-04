@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_od_clevr_tex_end_to_end
+#SBATCH --job-name=quantised_sa_od_clevr_tex_from_checkpoint
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -28,7 +28,7 @@ singularity exec instance://ml_env /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr-tex' --task 'clevr-tex' --from_checkpoint './sa_autoencoder_end_to_end/90_2.0_sa_od_pretrained.ckpt' --device 'gpu' --max_epochs 442 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-tex" --seed 0 --nums 8 8 8 8 --num_workers 4;
+      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr-tex' --task 'clevr-tex_from_checkpoint' --from_checkpoint './sa_autoencoder_end_to_end/430_2.0_sa_od_pretrained.ckpt' --device 'gpu' --max_epochs 442 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-tex" --seed 0 --nums 8 8 8 8 --num_workers 4;
       free -m;
 ";
 
