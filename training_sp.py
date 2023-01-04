@@ -146,7 +146,7 @@ if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
     autoencoder.load_from_checkpoint(args.sa_state_dict)
 
-project_name = 'set_prediction_' + dataset
+project_name = 'set_prediction_' + dataset + '_' + args.task
 
 wandb_logger = WandbLogger(project=project_name, name=f'nums {args.nums!r} s {args.seed}', log_model=True)
 
