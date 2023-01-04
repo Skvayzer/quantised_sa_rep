@@ -120,7 +120,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
-        print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
+        # print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
 
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()
@@ -138,14 +138,14 @@ class SlotAttentionAE(pl.LightningModule):
 
         if batch_idx == 0:
             imgs = batch['image'][:8]
-            print("img: ", imgs.shape, file=sys.stderr, flush=True)
+            # print("img: ", imgs.shape, file=sys.stderr, flush=True)
             true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
 
-            print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-            print("TRUE: ", true_masks[true_masks > 0], file=sys.stderr, flush=True)
-            print("PRED: ", pred_masks, file=sys.stderr, flush=True)
+            # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+            # print("TRUE: ", true_masks[true_masks > 0], file=sys.stderr, flush=True)
+            # print("PRED: ", pred_masks, file=sys.stderr, flush=True)
 
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
@@ -159,7 +159,7 @@ class SlotAttentionAE(pl.LightningModule):
             })
             pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
             true_masks = true_masks.view(*true_masks.shape[:2], -1)
-            print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+            # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
             self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
