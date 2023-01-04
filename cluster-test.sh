@@ -11,7 +11,6 @@
 #SBATCH --mem-per-gpu=16GB
 #SBATCH --mail-user=k.smirnov@innopolis.university
 #SBATCH --mail-type=END
-#SBATCH --kill-on-bad-exit=0
 #SBATCH --comment="Обучение нейросетевой модели в рамках НИР Центра когнитивного моделирования"
 
 singularity instance start \
