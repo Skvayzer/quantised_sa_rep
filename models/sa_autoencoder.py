@@ -27,6 +27,7 @@ class SlotAttentionAE(pl.LightningModule):
                  hidden_size=64,
                  beta=2,
                  lr=4e-4,
+                 task='',
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
@@ -36,6 +37,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.in_channels = in_channels
         self.slot_size = slot_size
         self.hidden_size = hidden_size
+        self.task = task
 
         # Encoder
         self.encoder = nn.Sequential(
@@ -163,7 +165,7 @@ class SlotAttentionAE(pl.LightningModule):
     def validation_epoch_end(self, outputdata):
         if self.current_epoch % 10 == 0:
             save_path = "./sa_autoencoder_end_to_end"
-            self.trainer.save_checkpoint(os.path.join(save_path, f"{self.current_epoch}_{self.beta}_sa_od_pretrained.ckpt"))
+            self.trainer.save_checkpoint(os.path.join(save_path, f"{self.current_epoch}_{self.beta}_{self.task}_sa_od_pretrained.ckpt"))
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
