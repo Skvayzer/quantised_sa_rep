@@ -28,6 +28,7 @@ class SlotAttentionAE(pl.LightningModule):
                  beta=2,
                  lr=4e-4,
                  task='',
+                 nums=[8, 8, 8, 8],
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
@@ -63,7 +64,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         self.slot_attention = SlotAttentionBase(num_slots=num_slots, iters=num_iters, dim=slot_size,
                                                 hidden_dim=slot_size * 2)
-        self.coord_quantizer = CoordQuantizer()
+        self.coord_quantizer = CoordQuantizer(nums)
         self.automatic_optimization = False
         self.num_steps = num_steps
         self.lr = lr
