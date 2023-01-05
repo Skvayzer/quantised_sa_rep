@@ -23,6 +23,8 @@ from torchvision.datasets import CelebA
 from models import SlotAttentionAE
 import wandb
 from datasets import collate_fn
+from datasets import MultiDSprites
+
 # ------------------------------------------------------------
 # Constants
 # ------------------------------------------------------------
@@ -122,6 +124,9 @@ elif dataset == 'celeba':
                            target_transform=transforms, download=True)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
                          target_transform=transforms, download=True)
+elif dataset == 'tetrominoes':
+    train_dataset = MultiDSprites(path_to_dataset=args.train_path / 'tetrominoes/train.npz')
+    val_dataset = MultiDSprites(path_to_dataset=args.train_path / 'tetrominoes/val.npz')
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True, collate_fn=collation)
