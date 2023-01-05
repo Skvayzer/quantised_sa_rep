@@ -148,7 +148,8 @@ class SlotAttentionAE(pl.LightningModule):
         if batch_idx == 0:
             imgs = batch['image'][:8]
             # print("img: ", imgs.shape, file=sys.stderr, flush=True)
-            true_masks = batch['mask'][:8]
+            if self.task == 'clevr-tex':
+                true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
 
@@ -166,10 +167,12 @@ class SlotAttentionAE(pl.LightningModule):
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
             })
-            pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
-            true_masks = true_masks.view(*true_masks.shape[:2], -1)
-            # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-            self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
+
+            if self.task == 'clevr-tex':
+                pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
+                true_masks = true_masks.view(*true_masks.shape[:2], -1)
+                # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+                self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
     def validation_epoch_end(self, outputdata):
