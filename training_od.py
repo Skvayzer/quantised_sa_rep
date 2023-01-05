@@ -94,13 +94,13 @@ if dataset == 'clevr':
                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
                         max_objs=6)
 elif dataset == 'clevr-mirror':
-    dataset = CLEVR(images_path=os.path.join(args.train_path, 'images'),
+    clevr_mirror = CLEVR(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'CLEVR_scenes.json'),
                       max_objs=6)
 
-    test_size = int(0.2 * len(dataset))
-    train_size = len(dataset) - test_size
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
+    test_size = int(0.2 * len(clevr_mirror))
+    train_size = len(clevr_mirror) - test_size
+    train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
 
 
 elif dataset == 'clevr-tex':
