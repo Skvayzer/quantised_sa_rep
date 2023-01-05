@@ -85,7 +85,7 @@ dataset = args.dataset
 train_dataset, val_dataset = None, None
 collation = None
 
-if dataset == 'clevr' or dataset == 'clevr-mirror':
+if dataset == 'clevr':
     train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
                           scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
                           max_objs=6)
@@ -93,6 +93,16 @@ if dataset == 'clevr' or dataset == 'clevr-mirror':
     val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
                         max_objs=6)
+elif dataset == 'clevr-mirror':
+    dataset = CLEVR(images_path=os.path.join(args.train_path, 'images'),
+                      scenes_path=os.path.join(args.train_path, 'CLEVR_scenes.json'),
+                      max_objs=6)
+
+    test_size = int(0.2 * len(dataset))
+    train_size = len(dataset) - test_size
+    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
+
+
 elif dataset == 'clevr-tex':
     # TO-DO: SPECIFY THE AMOUNT OF OBJECTS LIKE DONE ABOVE
     train_dataset = CLEVRTEX(
