@@ -90,6 +90,9 @@ class SlotAttentionAE(pl.LightningModule):
         props, coords, kl_loss = self.coord_quantizer(slots)
         slots = torch.cat([props, coords], dim=-1)
         sys.stderr.write("\nslot shape:\n " + str(slots.shape))
+        sys.stderr.write("\nprops:\n " + str(props.shape))
+        sys.stderr.write("\ncoords:\n " + str(coords.shape))
+
 
         slots = self.slots_lin(slots)
 
