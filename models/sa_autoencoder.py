@@ -104,7 +104,7 @@ class SlotAttentionAE(pl.LightningModule):
         # print("aaa", file=sys.stderr, flush=True)
 
         imgs = batch['image']
-        # sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
+        sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
         result, _, kl_loss, _ = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
