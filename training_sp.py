@@ -88,7 +88,7 @@ dataset = args.dataset
 train_dataset, val_dataset = None, None
 collation = None
 
-if dataset == 'clevr' or dataset == 'clevr-mirror':
+if dataset == 'clevr':
     train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
                           scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
                           max_objs=10)
@@ -118,6 +118,15 @@ elif dataset == 'clevr-tex':
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
     collation = collate_fn
+
+elif dataset == 'clevr-mirror':
+    clevr_mirror = CLEVR(images_path=os.path.join(args.train_path, 'images'),
+                      scenes_path=os.path.join(args.train_path, 'CLEVR_scenes.json'),
+                      max_objs=6)
+
+    test_size = int(0.2 * len(clevr_mirror))
+    train_size = len(clevr_mirror) - test_size
+    train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
 
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
