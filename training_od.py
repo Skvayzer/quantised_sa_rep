@@ -140,7 +140,11 @@ val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=arg
 # model
 dict_args = vars(args)
 
-autoencoder = SlotAttentionAE(**dict_args)
+if dataset == 'tetrominoes':
+    autoencoder = SlotAttentionAE(resolution=(35, 35),
+                     num_slots=4, **dict_args)
+else:
+    autoencoder = SlotAttentionAE(**dict_args)
 
 project_name = 'object_detection_' + dataset + '_' + args.task
 
