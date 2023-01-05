@@ -83,8 +83,13 @@ class SlotAttentionAE(pl.LightningModule):
 
         slots = self.slot_attention(x)
 
+        sys.stderr.write("\nslot shape:\n " + str(slots.shape))
+
+
         props, coords, kl_loss = self.coord_quantizer(slots)
         slots = torch.cat([props, coords], dim=-1)
+        sys.stderr.write("\nslot shape:\n " + str(slots.shape))
+
         slots = self.slots_lin(slots)
 
         x = spatial_broadcast(slots, self.decoder_initial_size)
