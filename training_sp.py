@@ -125,9 +125,9 @@ elif dataset == 'celeba':
         torchvision.transforms.ToTensor()
     ])
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
-                           target_transform=transforms, download=True)
+                           target_transform=transforms, download=False)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
-                         target_transform=transforms, download=True)
+                         target_transform=transforms, download=False)
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True, collate_fn=collation)
