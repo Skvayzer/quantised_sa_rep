@@ -29,6 +29,7 @@ class SlotAttentionAE(pl.LightningModule):
                  lr=4e-4,
                  task='',
                  nums=[8, 8, 8, 8],
+                 decoder_initial_size = (8, 8),
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
@@ -46,7 +47,7 @@ class SlotAttentionAE(pl.LightningModule):
             *[nn.Sequential(nn.Conv2d(hidden_size, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU()) for _ in
               range(3)]
         )
-        self.decoder_initial_size = (8, 8)
+        self.decoder_initial_size = decoder_initial_size
 
         # Decoder
         self.decoder = Decoder()
