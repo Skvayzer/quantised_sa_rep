@@ -15,7 +15,7 @@ from utils import spatial_broadcast, spatial_flatten, adjusted_rand_index
 
 class SlotAttentionAE(pl.LightningModule):
     """
-    Slot attention based autoencoder for object discovery task
+    Slot attention based autoencoder for object discovery dataset
     """
 
     def __init__(self,
@@ -27,7 +27,7 @@ class SlotAttentionAE(pl.LightningModule):
                  hidden_size=64,
                  beta=2,
                  lr=4e-4,
-                 task='',
+                 dataset='',
                  nums=[8, 8, 8, 8],
                  decoder_initial_size = (8, 8),
                  num_steps=int(3e5), **kwargs
@@ -39,7 +39,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.in_channels = in_channels
         self.slot_size = slot_size
         self.hidden_size = hidden_size
-        self.task = task
+        self.dataset = dataset
 
         # Encoder
         self.encoder = nn.Sequential(
@@ -130,20 +130,20 @@ class SlotAttentionAE(pl.LightningModule):
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
         # print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
-        if batch_idx == 0:
-            imgs = batch['image'][:8]
-            result, recons, _, pred_masks = self(imgs)
-            if self.task == 'clevr-mirror':
-                self.trainer.logger.experiment.log({
-                    'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
-                    'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                    # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
-                    # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
-                })
-                self.trainer.logger.experiment.log({
-                    f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
-                    for i in range(self.num_slots)
-                })
+        # if batch_idx == 0:
+        #     imgs = batch['image'][:8]
+        #     result, recons, _, pred_masks = self(imgs)
+        #     if self.dataset == 'clevr-mirror':
+        #         self.trainer.logger.experiment.log({
+        #             'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
+        #             'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
+        #             # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
+        #             # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
+        #         })
+        #         self.trainer.logger.experiment.log({
+        #             f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
+        #             for i in range(self.num_slots)
+        #         })
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()
         loss.backward()
@@ -161,7 +161,7 @@ class SlotAttentionAE(pl.LightningModule):
         if batch_idx == 0:
             imgs = batch['image'][:8]
             # print("img: ", imgs.shape, file=sys.stderr, flush=True)
-            if self.task == 'clevr-tex':
+            if self.dataset == 'clevr-tex':
                 true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
@@ -181,7 +181,7 @@ class SlotAttentionAE(pl.LightningModule):
                 for i in range(self.num_slots)
             })
 
-            if self.task == 'clevr-tex':
+            if self.dataset == 'clevr-tex':
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
                 # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
@@ -191,7 +191,7 @@ class SlotAttentionAE(pl.LightningModule):
     def validation_epoch_end(self, outputdata):
         if self.current_epoch % 10 == 0:
             save_path = "./sa_autoencoder_end_to_end"
-            self.trainer.save_checkpoint(os.path.join(save_path, f"{self.current_epoch}_{self.beta}_{self.task}_sa_od_pretrained.ckpt"))
+            self.trainer.save_checkpoint(os.path.join(save_path, f"{self.current_epoch}_{self.beta}_{self.dataset}_sa_od_pretrained.ckpt"))
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
