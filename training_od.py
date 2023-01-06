@@ -101,6 +101,7 @@ elif dataset == 'clevr-mirror':
     test_size = int(0.2 * len(clevr_mirror))
     train_size = len(clevr_mirror) - test_size
     train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
+    print("train/test sizes: ", train_size, test_size, file=sys.stderr, flush=True)
 
 
 elif dataset == 'clevr-tex':
