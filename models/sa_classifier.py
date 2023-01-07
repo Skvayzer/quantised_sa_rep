@@ -99,10 +99,10 @@ class QuantizedClassifier(pl.LightningModule):
     def step(self, batch, batch_idx, mode='Train'):
         images = batch['image']
         targets = batch['target']
-        print("AAAAAAAAAAAAAAAAATARGET: ", targets.shape, file=sys.stderr, flush=True)
+        print("\n\nAAAAAAAAAAAAAAAAATARGET: ", targets.shape, file=sys.stderr, flush=True)
 
         result = self(images)
-        print("AAAAAAAAAAAAAAAAARESULTS: ", result.shape, file=sys.stderr, flush=True)
+        print("\n\nAAAAAAAAAAAAAAAAARESULTS: ", result['prediction'].shape, file=sys.stderr, flush=True)
 
         # , coord_scale=self.coord_scale,)
         hung_loss = hungarian_huber_loss(result['prediction'], targets)
