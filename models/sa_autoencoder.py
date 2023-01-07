@@ -130,20 +130,20 @@ class SlotAttentionAE(pl.LightningModule):
         self.log('Training MSE', loss)
         self.log('Training KL', kl_loss)
         # print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
-        if batch_idx == 0:
-            imgs = batch['image'][:8]
-            result, recons, _, pred_masks = self(imgs)
-            if self.dataset == 'clevr-mirror':
-                self.trainer.logger.experiment.log({
-                    'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
-                    'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                    # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
-                    # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
-                })
-                self.trainer.logger.experiment.log({
-                    f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
-                    for i in range(self.num_slots)
-                })
+        # if batch_idx == 0:
+        #     imgs = batch['image'][:8]
+        #     result, recons, _, pred_masks = self(imgs)
+        #     if self.dataset == 'clevr-mirror':
+        #         self.trainer.logger.experiment.log({
+        #             'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
+        #             'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
+        #             # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
+        #             # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
+        #         })
+        #         self.trainer.logger.experiment.log({
+        #             f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
+        #             for i in range(self.num_slots)
+        #         })
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()
         loss.backward()
