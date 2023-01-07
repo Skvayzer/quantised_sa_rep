@@ -11,6 +11,10 @@ from PIL import Image
 class DatasetReadError(ValueError):
     pass
 
+# scale = [.9, .6, .4]
+# # materials = 60 of them
+# shapes = ['cube', 'sphere', 'cylinder', 'non-symmetric shape of anthropomorphized monkey head']
+# colors = ['gray', 'blue', 'brown', 'yellow', 'red', 'green', 'purple', 'cyan']
 
 class CLEVRTEX:
     ccrop_frac = 0.8
