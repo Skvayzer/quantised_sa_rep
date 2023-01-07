@@ -122,7 +122,7 @@ elif dataset == 'clevr-tex':
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'scenes'),
-                      max_objs=6)
+                      max_objs=10)
 
     test_size = int(0.2 * len(clevr_mirror))
     train_size = len(clevr_mirror) - test_size

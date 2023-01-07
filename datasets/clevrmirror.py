@@ -25,7 +25,7 @@ color2id = list2dict(colors)
 
 
 class CLEVR_Mirror(Dataset):
-    def __init__(self, images_path, scenes_path, max_objs=6, get_target=True):
+    def __init__(self, images_path, scenes_path, max_objs=None, get_target=True):
         self.max_objs = max_objs
         self.get_target = get_target
         self.images_path = images_path
@@ -38,7 +38,7 @@ class CLEVR_Mirror(Dataset):
             with open(os.path.join(scenes_path, f), 'r') as file:
                 scene = json.load(file)
                 # print("\n\nAAAAAAAAAAAAAAAAAscene: ", scene, file=sys.stderr, flush=True)
-                if len(scene['objects']) <= max_objs:
+                if max_objs == None or len(scene['objects']) <= max_objs:
                     self.scenes.append(scene)
                     self.images.append(f.replace('.json', '.png'))
 
