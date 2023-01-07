@@ -20,7 +20,7 @@ from pytorch_lightning import seed_everything
 
 from argparse import ArgumentParser
 
-from datasets import CLEVR, CLEVRTEX
+from datasets import CLEVR, CLEVRTEX, CLEVR_Mirror
 from torchvision.datasets import CelebA
 from models import QuantizedClassifier
 from models import SlotAttentionAE
@@ -120,12 +120,14 @@ elif dataset == 'clevr-tex':
     collation = collate_fn
 
 elif dataset == 'clevr-mirror':
-    clevr_mirror = CLEVR(images_path=os.path.join(args.train_path, 'images'),
-                      scenes_path=os.path.join(args.train_path, 'CLEVR_scenes.json'),
+    clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
+                      scenes_path=os.path.join(args.train_path, 'scenes'),
                       max_objs=6)
 
     test_size = int(0.2 * len(clevr_mirror))
     train_size = len(clevr_mirror) - test_size
+    print("ATTENTION! train/test sizes: ", train_size, test_size, file=sys.stderr, flush=True)
+
     train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
 
 elif dataset == 'celeba':
