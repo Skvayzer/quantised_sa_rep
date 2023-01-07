@@ -36,6 +36,7 @@ class CLEVR_Mirror(Dataset):
         for f in os.listdir(scenes_path):
             with open(os.path.join(scenes_path, f), 'r') as file:
                 scene = json.load(file)
+                print("AAAAAAAAAAAAAAAAAscene: ", scene, file=sys.stderr, flush=True)
                 if len(scene['objects']) <= max_objs:
                     self.scenes.append(scene)
                     self.images.append(f.replace('.json', '.png'))
