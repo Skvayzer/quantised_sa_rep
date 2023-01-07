@@ -74,7 +74,7 @@ class CLEVR_Mirror(Dataset):
 
 
 if __name__ == '__main__':
-    clevr = CLEVR(images_path='/home/alexandr_ko/datasets/CLEVR_v1.0/images/train/',
+    clevr = CLEVR_Mirror(images_path='/home/alexandr_ko/datasets/CLEVR_v1.0/images/train/',
                   scenes_path='/home/alexandr_ko/datasets/CLEVR_v1.0/scenes/CLEVR_train_scenes.json')
 
     example = clevr[1]
