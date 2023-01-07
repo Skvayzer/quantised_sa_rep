@@ -69,7 +69,7 @@ class CLEVR_Mirror(Dataset):
             while len(target) < self.max_objs:
                 target.append(torch.zeros(19))
             target = torch.stack(target)
-        print("TARGET: ", target.shape, file=sys.stderr, flush=True)
+        print("AAAAAAAAAAAAAAAAATARGET: ", target.shape, file=sys.stderr, flush=True)
         return {
             'image': img * 2 - 1,
             'target': target
