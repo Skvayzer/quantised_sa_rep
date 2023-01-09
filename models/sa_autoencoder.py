@@ -28,6 +28,7 @@ class SlotAttentionAE(pl.LightningModule):
                  beta=2,
                  lr=4e-4,
                  dataset='',
+                 task='',
                  nums=[8, 8, 8, 8],
                  decoder_initial_size = (8, 8),
                  num_steps=int(3e5), **kwargs
@@ -40,6 +41,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.slot_size = slot_size
         self.hidden_size = hidden_size
         self.dataset = dataset
+        self.task = task
 
         # Encoder
         self.encoder = nn.Sequential(
