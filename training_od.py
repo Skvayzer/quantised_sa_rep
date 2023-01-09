@@ -133,9 +133,9 @@ elif dataset == 'celeba':
         torchvision.transforms.ToTensor()
     ])
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
-                           target_transform=transforms, download=False)
+                           target_transform=transforms, download=True)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
-                         target_transform=transforms, download=False)
+                         target_transform=transforms, download=True)
 elif dataset == 'tetrominoes':
     train_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_train.npz'))
     val_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_val.npz'))
