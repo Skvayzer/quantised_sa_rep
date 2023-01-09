@@ -2,8 +2,8 @@
 #SBATCH --job-name=quantised_sa_od_celeba_end_to_end
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gpus-per-task=1
-#SBATCH --cpus-per-task=4
+#SBATCH --gpus-per-task=0
+#SBATCH --cpus-per-task=1
 ##SBATCH --time=0-0:05:00
 #SBATCH --partition=titan_X
 ##SBATCH --gres=gpu:1
