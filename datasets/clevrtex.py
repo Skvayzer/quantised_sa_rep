@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 import numpy as np
 import torch
+import torch.nn.functional as F
 import torchvision.transforms.functional as Ft
 from PIL import Image
 
@@ -11,10 +12,84 @@ from PIL import Image
 class DatasetReadError(ValueError):
     pass
 
-# scale = [.9, .6, .4]
-# # materials = 60 of them
-# shapes = ['cube', 'sphere', 'cylinder', 'non-symmetric shape of anthropomorphized monkey head']
-# colors = ['gray', 'blue', 'brown', 'yellow', 'red', 'green', 'purple', 'cyan']
+sizes = ['large', 'medium', 'small']
+materials = [
+    'MyMetal',
+    'PoliigonBricks01',
+    'PoliigonBricksFlemishRed001',
+    'PoliigonBricksPaintedWhite001',
+    'PoliigonCarpetTwistNatural001',
+    'PoliigonChainmailCopperRoundedThin001',
+    'PoliigonCityStreetAsphaltGenericCracked002',
+    'PoliigonCityStreetRoadAsphaltTwoLaneWorn001',
+    'PoliigonCliffJagged004',
+    'PoliigonCobblestoneArches002',
+    'PoliigonConcreteWall001',
+    'PoliigonFabricDenim003',
+    'PoliigonFabricFleece001',
+    'PoliigonFabricLeatherBuffaloRustic001',
+    'PoliigonFabricRope001',
+    'PoliigonFabricUpholsteryBrightAnglePattern001',
+    'PoliigonGroundClay002',
+    'PoliigonGroundDirtForest014',
+    'PoliigonGroundDirtRocky002',
+    'PoliigonGroundForest003',
+    'PoliigonGroundForest008',
+    'PoliigonGroundForestMulch001',
+    'PoliigonGroundForestRoots001',
+    'PoliigonGroundMoss001',
+    'PoliigonGroundSnowPitted003',
+    'PoliigonGroundTireTracks001',
+    'PoliigonInteriorDesignRugStarryNight001',
+    'PoliigonMarble062',
+    'PoliigonMarble13',
+    'PoliigonMetalCorrodedHeavy001',
+    'PoliigonMetalCorrugatedIronSheet002',
+    'PoliigonMetalDesignerWeaveSteel002',
+    'PoliigonMetalPanelRectangular001',
+    'PoliigonMetalSpottyDiscoloration001',
+    'PoliigonMetalStainlessSteelBrushed',
+    'PoliigonPlaster07',
+    'PoliigonPlaster17',
+    'PoliigonRoadCityWorn001',
+    'PoliigonRoofTilesTerracotta004',
+    'PoliigonRustMixedOnPaint012',
+    'PoliigonRustPlain007',
+    'PoliigonSolarPanelsPolycrystallineTypeBFramedClean001',
+    'PoliigonStoneBricksBeige015',
+    'PoliigonStoneMarbleCalacatta004',
+    'PoliigonTerrazzoVenetianMatteWhite001',
+    'PoliigonTiles05''PoliigonTilesMarbleChevronCreamGrey001',
+    'PoliigonTilesMarbleSageGreenBrickBondHoned001',
+    'PoliigonTilesOnyxOpaloBlack001''PoliigonTilesRectangularMirrorGray001',
+    'PoliigonWallMedieval003',
+    'PoliigonWaterDropletsMixedBubbled001',
+    'PoliigonWoodFineDark004',
+    'PoliigonWoodFlooring044',
+    'PoliigonWoodFlooring061',
+    'PoliigonWoodFlooringMahoganyAfricanSanded001',
+    'PoliigonWoodFlooringMerbauBrickBondNatural001',
+    'PoliigonWoodPlanks028',
+    'PoliigonWoodPlanksWorn33',
+    'PoliigonWoodQuarteredChiffon001',
+    'Rubber',
+    'TabulaRasa',
+    'WhiteMarble'
+]
+shapes = ['cube', 'sphere', 'cylinder', 'monkey']
+
+# for VarBG variant
+colors = ['gray', "red", "blue", "green", "brown", "purple", "cyan", "yellow"]
+
+
+def list2dict(inpt_list):
+    return {inpt_list[i]: i for i in range(len(inpt_list))}
+
+size2id = list2dict(sizes)
+mat2id = list2dict(materials)
+shape2id = list2dict(shapes)
+color2id = list2dict(colors)
+
 
 class CLEVRTEX:
     ccrop_frac = 0.8
@@ -146,25 +221,36 @@ class CLEVRTEX:
 
     def _format_metadata(self, meta):
         """
-        Drop unimportanat, unsued or incorrect data from metadata.
+        Drop unimportant, unused or incorrect data from metadata.
         Data may become incorrect due to transformations,
         such as cropping and resizing would make pixel coordinates incorrect.
         Furthermore, only VBG dataset has color assigned to objects, we delete the value for others.
         """
-        objs = []
+        target = []
         for obj in meta['objects']:
+            coords = ((torch.tensor(obj['3d_coords']) + 3.) / 6.).view(1, 3)
+            size = F.one_hot(torch.LongTensor([size2id[obj['size']]]), 3)
+            material = F.one_hot(torch.LongTensor([mat2id[obj['material']]]), 60)
+            shape = F.one_hot(torch.LongTensor([shape2id[obj['shape']]]), 4)
             o = {
-                'material': obj['material'],
-                'shape': obj['shape'],
-                'size': obj['size'],
-                'rotation': obj['rotation'],
+                'material': material,
+                'shape': shape,
+                'size': size,
+                '3d_coords': coords,
             }
+
+
             if self.dataset_variant == 'vbg':
                 o['color'] = obj['color']
-            objs.append(o)
+            obj_vec = torch.cat((coords, size, material, shape, torch.Tensor([[1.]])), dim=1)[0]
+            print('\n\nAAAA OBJ_VEC INFO ', obj_vec.shape, file=sys.stderr, flush=True)
+
+            target.append(obj_vec)
+        while len(target) < self.max_obj:
+            target.append(torch.zeros(19))
+
         return {
-            'ground_material': meta['ground_material'],
-            'objects': objs
+            'target': target
         }
 
     def __len__(self):

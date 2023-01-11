@@ -20,7 +20,7 @@ class QuantizedClassifier(pl.LightningModule):
 
     def __init__(self, resolution=(128, 128),
                  num_slots=10, num_iters=3, in_channels=3,
-                 hidden_size=64, slot_size=64,
+                 hidden_size=64, slot_size=64, quantize=True, num_props=19,
                  lr=0.00035, coord_scale=1., nums=[8, 3, 2, 2], **kwargs):
         super().__init__()
         self.resolution = resolution
@@ -30,6 +30,7 @@ class QuantizedClassifier(pl.LightningModule):
         self.hidden_size = hidden_size
         self.slot_size = slot_size
         self.coord_scale = coord_scale
+        self.quantize = quantize
 
         self.encoder_cnn = Encoder(
             in_channels=self.in_channels, hidden_size=hidden_size)
@@ -43,7 +44,7 @@ class QuantizedClassifier(pl.LightningModule):
             nn.Linear(hidden_size, slot_size)
         )
         self.slot_attention = SlotAttentionBase(
-            num_slots=num_slots, iters=num_iters, dim=slot_size, hidden_dim=slot_size*2)
+            num_slots=num_slots, iters=num_iters, dim=slot_size, hidden_dim=slot_size * 2)
 
         self.mlp_coords = nn.Sequential(
             nn.Linear(slot_size, hidden_size),
@@ -51,11 +52,19 @@ class QuantizedClassifier(pl.LightningModule):
             nn.Linear(hidden_size, 3),
             nn.Sigmoid()
         )
+
         self.mlp_prop = nn.Sequential(
             nn.Linear(16 * len(nums), hidden_size),
             nn.ReLU(),
-            nn.Linear(hidden_size, 19-3),
+            nn.Linear(hidden_size, 19 - 3),
             # nn.Sigmoid()
+        )
+
+        self.mlp_classifier = nn.Sequential(
+            nn.Linear(slot_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, num_props),
+            nn.Sigmoid()
         )
         self.quantizer = CoordQuantizer(nums=nums)
 
@@ -74,23 +83,26 @@ class QuantizedClassifier(pl.LightningModule):
         x = self.mlp(self.layer_norm(x))
         x = self.slot_attention(x)
 
-        props, coords, _ = self.quantizer(x)
-        # raise ValueError(f'{props.shape}, {coords.shape}')
-        # props -> (bs, 10, 48) if 16,16,16
-        # coords -> (bs, 10, 64)
-        coords = x
-        coords = self.mlp_coords(coords)
+        if self.quantize:
+            props, coords, _ = self.quantizer(x)
+            # raise ValueError(f'{props.shape}, {coords.shape}')
+            # props -> (bs, 10, 48) if 16,16,16
+            # coords -> (bs, 10, 64)
+            coords = x
+            coords = self.mlp_coords(coords)
 
-        props = props
-        props = self.mlp_prop(props)
+            props = props
+            props = self.mlp_prop(props)
 
-        props[:, :, 0:2] = self.smax(props[:, :, 0:2].clone())
-        props[:, :, 2:4] = self.smax(props[:, :, 2:4].clone())
-        props[:, :, 4:7] = self.smax(props[:, :, 4:7].clone())
-        props[:, :, 7:15] = self.smax(props[:, :, 7:15].clone())
-        props[:, :, 15:] = self.sigmoid(props[:, :, 15:].clone())
+            props[:, :, 0:2] = self.smax(props[:, :, 0:2].clone())
+            props[:, :, 2:4] = self.smax(props[:, :, 2:4].clone())
+            props[:, :, 4:7] = self.smax(props[:, :, 4:7].clone())
+            props[:, :, 7:15] = self.smax(props[:, :, 7:15].clone())
+            props[:, :, 15:] = self.sigmoid(props[:, :, 15:].clone())
 
-        res = torch.cat([coords, props], dim=-1)
+            res = torch.cat([coords, props], dim=-1)
+        else:
+            res = self.mlp_classifier(x)
         return {
             'prediction': res,
             # 'log_likelihood': log_l
@@ -139,7 +151,6 @@ class QuantizedClassifier(pl.LightningModule):
                 for thr in self.thrs
             }
 
-
         return metrics, ap_metrics
 
     def training_step(self, batch, batch_idx):
@@ -173,7 +184,7 @@ class QuantizedClassifier(pl.LightningModule):
         metrics, ap_metrics = self.step(batch, batch_idx, mode='Test')
         self.log('test perf', metrics, on_step=True, on_epoch=True)
         self.log('test ap metrics', ap_metrics,
-                    on_step=True, on_epoch=True)
+                 on_step=True, on_epoch=True)
         return metrics['loss']
 
     def configure_optimizers(self):

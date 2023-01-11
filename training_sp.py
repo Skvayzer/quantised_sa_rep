@@ -97,6 +97,7 @@ if dataset == 'clevr':
     val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
                         max_objs=10)
+    num_props = 19
 elif dataset == 'clevr-tex':
     # TO-DO: SPECIFY THE AMOUNT OF OBJECTS LIKE DONE ABOVE
     train_dataset = CLEVRTEX(
@@ -119,6 +120,7 @@ elif dataset == 'clevr-tex':
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
     collation = collate_fn
+    num_props = 19
 
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
@@ -130,6 +132,7 @@ elif dataset == 'clevr-mirror':
     print("ATTENTION! train/test sizes: ", train_size, test_size, file=sys.stderr, flush=True)
 
     train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
+    num_props = 19
 
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
@@ -140,6 +143,8 @@ elif dataset == 'celeba':
                            target_transform=transforms, download=False)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
                          target_transform=transforms, download=False)
+    num_props = 19
+
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True, collate_fn=collation)
@@ -153,10 +158,10 @@ val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=arg
 # model
 dict_args = vars(args)
 
-autoencoder = QuantizedClassifier(**dict_args)
+classifier = QuantizedClassifier(num_props=num_props, **dict_args)
 if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
-    autoencoder.load_from_checkpoint(args.sa_state_dict)
+    classifier.load_from_checkpoint(args.sa_state_dict)
 
 project_name = 'set_prediction_' + dataset + '_' + args.task
 
@@ -209,7 +214,7 @@ if not len(args.from_checkpoint):
     args.from_checkpoint = None
 
 # Train
-trainer.fit(autoencoder, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=args.from_checkpoint)
+trainer.fit(classifier, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=args.from_checkpoint)
 # Test
 
 trainer.test(dataloaders=val_loader, ckpt_path=None)
