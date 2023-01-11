@@ -31,6 +31,7 @@ class SlotAttentionAE(pl.LightningModule):
                  task='',
                  nums=[8, 8, 8, 8],
                  decoder_initial_size = (8, 8),
+                 quantize=True,
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
@@ -42,6 +43,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.hidden_size = hidden_size
         self.dataset = dataset
         self.task = task
+        self.quantize = quantize
 
         # Encoder
         self.encoder = nn.Sequential(
@@ -88,12 +90,13 @@ class SlotAttentionAE(pl.LightningModule):
 
         sys.stderr.write("\nslot shape:\n " + str(slots.shape))
 
-
-        props, coords, kl_loss = self.coord_quantizer(slots)
-        slots = torch.cat([props, coords], dim=-1)
-        sys.stderr.write("\nslot shape:\n " + str(slots.shape))
-        sys.stderr.write("\nprops:\n " + str(props.shape))
-        sys.stderr.write("\ncoords:\n " + str(coords.shape))
+        kl_loss = 0
+        if self.quantize:
+            props, coords, kl_loss = self.coord_quantizer(slots)
+            slots = torch.cat([props, coords], dim=-1)
+            sys.stderr.write("\nslot shape:\n " + str(slots.shape))
+            sys.stderr.write("\nprops:\n " + str(props.shape))
+            sys.stderr.write("\ncoords:\n " + str(coords.shape))
 
 
         slots = self.slots_lin(slots)

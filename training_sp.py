@@ -59,6 +59,7 @@ program_parser.add_argument("--pretrained", type=bool, default=False)
 program_parser.add_argument("--num_workers", type=int, default=4)
 program_parser.add_argument("--beta", type=float, default=2.)
 program_parser.add_argument("--task", type=str, default='')
+program_parser.add_argument("--quantize", type=bool, default=True)
 
 # Add model specific args
 # parser = SlotAttentionAE.add_model_specific_args(parent_parser=parser)

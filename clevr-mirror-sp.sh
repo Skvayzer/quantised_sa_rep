@@ -29,7 +29,7 @@ singularity exec instance://ml_env /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_sp.py --dataset 'clevr-mirror' --from_checkpoint '/home/quantised_sa/set_prediction_clevr-mirror_/1gsmknit/checkpoints/epoch=149-step=394650.ckpt' --task 'end_to_end' --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 0 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/training_sp.py --dataset 'clevr-mirror' --quantize False --task 'end_to_end' --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 0 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
