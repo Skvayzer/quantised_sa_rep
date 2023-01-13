@@ -14,7 +14,7 @@ class DatasetReadError(ValueError):
 
 sizes = ['large', 'medium', 'small']
 materials = [
-    'MyMetal',
+    #'MyMetal',
     'PoliigonBricks01',
     'PoliigonBricksFlemishRed001',
     'PoliigonBricksPaintedWhite001',
@@ -59,9 +59,11 @@ materials = [
     'PoliigonStoneBricksBeige015',
     'PoliigonStoneMarbleCalacatta004',
     'PoliigonTerrazzoVenetianMatteWhite001',
-    'PoliigonTiles05''PoliigonTilesMarbleChevronCreamGrey001',
+    'PoliigonTiles05',
+    'PoliigonTilesMarbleChevronCreamGrey001',
     'PoliigonTilesMarbleSageGreenBrickBondHoned001',
-    'PoliigonTilesOnyxOpaloBlack001''PoliigonTilesRectangularMirrorGray001',
+    'PoliigonTilesOnyxOpaloBlack001',
+    'PoliigonTilesRectangularMirrorGray001',
     'PoliigonWallMedieval003',
     'PoliigonWaterDropletsMixedBubbled001',
     'PoliigonWoodFineDark004',
@@ -72,8 +74,8 @@ materials = [
     'PoliigonWoodPlanks028',
     'PoliigonWoodPlanksWorn33',
     'PoliigonWoodQuarteredChiffon001',
-    'Rubber',
-    'TabulaRasa',
+    #'Rubber',
+    #'TabulaRasa',
     'WhiteMarble'
 ]
 materials = [s.lower() for s in materials]
