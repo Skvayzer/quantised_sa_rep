@@ -17,7 +17,7 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning import seed_everything
 
 from argparse import ArgumentParser
-
+import argparse
 from datasets import CLEVR, CLEVRTEX, CLEVR_Mirror
 from torchvision.datasets import CelebA
 from models import SlotAttentionAE
@@ -56,7 +56,7 @@ program_parser.add_argument("--pretrained", type=bool, default=False)
 program_parser.add_argument("--beta", type=float, default=2.)
 program_parser.add_argument("--num_workers", type=int, default=4)
 program_parser.add_argument("--task", type=str, default='')
-program_parser.add_argument("--quantize", type=bool, default=True)
+program_parser.add_argument("--quantization", default=True, action=argparse.BooleanOptionalAction)
 
 
 # Add model specific args
@@ -101,7 +101,6 @@ elif dataset == 'clevr-mirror':
 
     test_size = int(0.2 * len(clevr_mirror))
     train_size = len(clevr_mirror) - test_size
-    print("ATTENTION! train/test sizes: ", train_size, test_size, file=sys.stderr, flush=True)
 
     train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
 
@@ -149,6 +148,7 @@ val_loader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=arg
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
+print("\n\nATTENTION! quantize: ", args.quantization, '\n\n', file=sys.stderr, flush=True)
 
 # model
 dict_args = vars(args)

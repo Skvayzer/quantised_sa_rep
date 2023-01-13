@@ -20,7 +20,7 @@ class QuantizedClassifier(pl.LightningModule):
 
     def __init__(self, resolution=(128, 128),
                  num_slots=10, num_iters=3, in_channels=3,
-                 hidden_size=64, slot_size=64, quantize=True, num_props=19,
+                 hidden_size=64, slot_size=64, quantization=True, num_props=19,
                  lr=0.00035, coord_scale=1., nums=[8, 3, 2, 2], **kwargs):
         super().__init__()
         self.resolution = resolution
@@ -30,7 +30,7 @@ class QuantizedClassifier(pl.LightningModule):
         self.hidden_size = hidden_size
         self.slot_size = slot_size
         self.coord_scale = coord_scale
-        self.quantize = quantize
+        self.quantization = quantization
 
         self.encoder_cnn = Encoder(
             in_channels=self.in_channels, hidden_size=hidden_size)
@@ -83,7 +83,7 @@ class QuantizedClassifier(pl.LightningModule):
         x = self.mlp(self.layer_norm(x))
         x = self.slot_attention(x)
 
-        if self.quantize:
+        if self.quantization:
             props, coords, _ = self.quantizer(x)
             # raise ValueError(f'{props.shape}, {coords.shape}')
             # props -> (bs, 10, 48) if 16,16,16
