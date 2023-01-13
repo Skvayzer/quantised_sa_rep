@@ -76,6 +76,8 @@ materials = [
     'TabulaRasa',
     'WhiteMarble'
 ]
+materials = [s.lower() for s in materials]
+
 shapes = ['cube', 'sphere', 'cylinder', 'monkey']
 
 # for VarBG variant
@@ -201,6 +203,7 @@ class CLEVRTEX:
         if not self.basepath.exists():
             raise DatasetReadError()
         sub_fold = self._variant_subfolder()
+
         if self.basepath.name != sub_fold:
             self.basepath = self.basepath / sub_fold
         #         try:
