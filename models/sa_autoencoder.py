@@ -65,7 +65,7 @@ class SlotAttentionAE(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(hidden_size, slot_size)
         )
-        self.slots_lin = nn.Linear(hidden_size * 2, hidden_size)
+        self.slots_lin = nn.Linear(hidden_size * 3, slot_size)
 
         self.slot_attention = SlotAttentionBase(num_slots=num_slots, iters=num_iters, dim=slot_size,
                                                 hidden_dim=slot_size * 2)
