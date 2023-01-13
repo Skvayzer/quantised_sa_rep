@@ -159,9 +159,9 @@ if dataset == 'tetrominoes':
 else:
     autoencoder = SlotAttentionAE(**dict_args)
 
-project_name = 'object_detection_' + dataset + '_' + args.task
+project_name = 'object_detection_' + dataset
 
-wandb_logger = WandbLogger(project=project_name, name=f'nums {args.nums!r} s {args.seed} kl {args.beta}',
+wandb_logger = WandbLogger(project=project_name, name=f'{args.task}: nums {args.nums!r} s {args.seed} kl {args.beta}',
                            log_model=True)
 # ------------------------------------------------------------
 # Callbacks

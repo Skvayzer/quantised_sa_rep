@@ -164,9 +164,9 @@ if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
     classifier.load_from_checkpoint(args.sa_state_dict)
 
-project_name = 'set_prediction_' + dataset + '_' + args.task
+project_name = 'set_prediction_' + dataset
 
-wandb_logger = WandbLogger(project=project_name, name=f'nums {args.nums!r} s {args.seed}', log_model=True)
+wandb_logger = WandbLogger(project=project_name, name=f'{args.task}: nums {args.nums!r} s {args.seed}', log_model=True)
 
 # ------------------------------------------------------------
 # Callbacks
