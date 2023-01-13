@@ -5,7 +5,7 @@
 #SBATCH --gpus-per-task=1
 #SBATCH --cpus-per-task=4
 ##SBATCH --time=0-0:05:00
-#SBATCH --partition=GTX780
+#SBATCH --partition=titan_X
 ##SBATCH --gres=gpu:1
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-gpu=16GB
@@ -29,7 +29,7 @@ singularity exec instance://ml_env /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_od.py --dataset 'celeba' --task 'celeba_end_to_end' --device 'gpu' --max_epochs 1000 --batch_size 64 --train_path "/home/quantised_sa/datasets/celeba/celeba" --seed 0 --nums 8 8 8 8 --num_workers 4;
+      python3 -u quantised_sa_rep/training_od.py --dataset 'celeba' --task 'celeba_end_to_end' --device 'gpu' --max_epochs 1000 --batch_size 64 --train_path "/home/quantised_sa/datasets/celeba" --seed 0 --nums 8 8 8 8 --num_workers 4;
       free -m;
 ";
 
