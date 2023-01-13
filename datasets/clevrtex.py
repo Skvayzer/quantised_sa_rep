@@ -246,11 +246,11 @@ class CLEVRTEX:
             if self.dataset_variant == 'vbg':
                 o['color'] = obj['color']
             obj_vec = torch.cat((coords, size, material, shape, torch.Tensor([[1.]])), dim=1)[0]
-            print('\n\nAAAA OBJ_VEC INFO ', obj_vec.shape, file=sys.stderr, flush=True)
+            # print('\n\nAAAA OBJ_VEC INFO ', obj_vec.shape, file=sys.stderr, flush=True)
 
             target.append(obj_vec)
         while len(target) < self.max_obj:
-            target.append(torch.zeros(19))
+            target.append(torch.zeros(71))
 
         return {
             'target': target
@@ -301,7 +301,7 @@ class CLEVRTEX:
             with self.metadata_index[ind].open('r') as inf:
                 meta = json.load(inf)
             ret = (ind, img, msk, self._format_metadata(meta))
-        item = {'image': img, 'mask': msk, 'target': ret[-1]['objects'], 'index': ind}
+        item = {'image': img, 'mask': msk, 'target': ret[-1], 'index': ind}
         # if len(item['target']['objects']) > self.max_obj:
         #     del self.index[ind]
         #     del self.mask_index[ind]
