@@ -3,6 +3,8 @@ import torch
 from torch.nn import functional as F
 import numpy as np
 
+from .vsa import get_vsa_grid
+
 
 def get_grid(n):
     x = np.linspace(0, 1.5, n)
@@ -31,14 +33,16 @@ def get_distances(t1, t2):
             + torch.sum(t2 ** 2, dim=1) - 2 * torch.matmul(t1, t2.t()))
 
 
-def sample_gumbel(shape, device, eps=1e-20):
-    U = torch.rand(shape, device=device)
+def sample_gumbel(shape, eps=1e-20):
+    U = torch.rand(shape)
+    if torch.cuda.is_available():
+        U = U.cuda()
     return -torch.log(-torch.log(U + eps) + eps)
 
 
 class CoordQuantizer(nn.Module):
     # def __init__(self, total_embeds=36, embeds_slices=[0, 9, 18, 27, None], nums=[9, 9, 9, 9]):
-    def __init__(self, nums=[8, 8, 8, 8]):
+    def __init__(self, nums=[8, 3, 2, 2]):
         super().__init__()
         self.num_steps = 10
         self.grid1 = nn.Parameter(torch.Tensor(get_grid(self.num_steps))[:, :, :], requires_grad=False)  # [4:5, :, :]
@@ -65,7 +69,7 @@ class CoordQuantizer(nn.Module):
         log_uniform = torch.log(torch.tensor([1. / self.num_steps ** 3], device=inputs.device))
         kl_loss = self.kl(log_uniform, x)
 
-        x = x + sample_gumbel(x.size(), device=x.device)
+        x = x + sample_gumbel(x.size())
         x = F.softmax(x / self.temp, dim=-1)
         samples = [torch.unsqueeze(torch.argmax(x.view(-1, x.shape[2]), dim=-1), dim=-1)]
         return x, kl_loss, p_dis, samples
@@ -89,7 +93,7 @@ class CoordQuantizer(nn.Module):
             log_uniform = torch.log(torch.tensor([1. / self.nums[i]], device=inputs.device))
             kl_loss = kl_loss + self.kl(log_uniform, x)
 
-            x = x + sample_gumbel(x.size(), device=x.device)
+            x = x + sample_gumbel(x.size())
             x = F.softmax(x / self.temp, dim=-1)
 
             samples.append(torch.unsqueeze(torch.argmax(x.view(-1, x.shape[2]), dim=-1), dim=-1))
@@ -113,5 +117,7 @@ class CoordQuantizer(nn.Module):
         indices, kl_p, p_dis, p_samples = self.get_indices(inputs)
         quantized = self.use_indices(indices)
 
-        loss = (kl_c + kl_p) / 5
+        # loss = (kl_c + kl_p) / 5
+        # just properties
+        loss = (kl_p) / 5
         return quantized, quantized_coord, loss
