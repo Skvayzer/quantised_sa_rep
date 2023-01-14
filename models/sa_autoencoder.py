@@ -104,7 +104,7 @@ class SlotAttentionAE(pl.LightningModule):
 
     def step(self, batch):
         imgs = batch['image']
-        result, _, kl_loss = self(imgs)
+        result, _, kl_loss, _ = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
 
