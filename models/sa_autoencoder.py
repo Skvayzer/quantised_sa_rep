@@ -1,5 +1,4 @@
 import os
-import sys
 
 import pytorch_lightning as pl
 import torch
@@ -13,9 +12,10 @@ from modules import Decoder, PosEmbeds, CoordQuantizer
 from modules.slot_attention import SlotAttentionBase
 from utils import spatial_broadcast, spatial_flatten, adjusted_rand_index
 
+
 class SlotAttentionAE(pl.LightningModule):
     """
-    Slot attention based autoencoder for object discovery dataset
+    Slot attention based autoencoder for object discovery task
     """
 
     def __init__(self,
@@ -25,13 +25,12 @@ class SlotAttentionAE(pl.LightningModule):
                  in_channels=3,
                  slot_size=64,
                  hidden_size=64,
-                 beta=2,
-                 lr=4e-4,
                  dataset='',
                  task='',
-                 nums=[8, 8, 8, 8],
-                 decoder_initial_size = (8, 8),
                  quantization=True,
+                 nums=[8, 8, 8, 8],
+                 beta=2,
+                 lr=4e-4,
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
@@ -51,13 +50,13 @@ class SlotAttentionAE(pl.LightningModule):
             *[nn.Sequential(nn.Conv2d(hidden_size, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU()) for _ in
               range(3)]
         )
-        self.decoder_initial_size = decoder_initial_size
+        self.decoder_initial_size = (8, 8)
 
         # Decoder
         self.decoder = Decoder()
 
-        self.enc_emb = PosEmbeds(hidden_size, self.resolution)
-        self.dec_emb = PosEmbeds(hidden_size, self.decoder_initial_size)
+        self.enc_emb = PosEmbeds(64, self.resolution)
+        self.dec_emb = PosEmbeds(64, self.decoder_initial_size)
 
         self.layer_norm = nn.LayerNorm(hidden_size)
         self.mlp = nn.Sequential(
@@ -65,7 +64,7 @@ class SlotAttentionAE(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(hidden_size, slot_size)
         )
-        self.slots_lin = nn.Linear(16 * len(nums) + 64, slot_size)
+        self.slots_lin = nn.Linear(16 * len(nums) + 64, hidden_size)
 
         self.slot_attention = SlotAttentionBase(num_slots=num_slots, iters=num_iters, dim=slot_size,
                                                 hidden_dim=slot_size * 2)
@@ -77,8 +76,6 @@ class SlotAttentionAE(pl.LightningModule):
         self.save_hyperparameters()
 
     def forward(self, inputs):
-
-
         x = self.encoder(inputs)
         x = self.enc_emb(x)
 
@@ -88,19 +85,11 @@ class SlotAttentionAE(pl.LightningModule):
 
         slots = self.slot_attention(x)
 
-        sys.stderr.write("\nslot shape:\n " + str(slots.shape))
-
         kl_loss = 0
         if self.quantization:
             props, coords, kl_loss = self.coord_quantizer(slots)
             slots = torch.cat([props, coords], dim=-1)
-
-            sys.stderr.write("\nslot shape:\n " + str(slots.shape))
-            sys.stderr.write("\nprops:\n " + str(props.shape))
-            sys.stderr.write("\ncoords:\n " + str(coords.shape))
             slots = self.slots_lin(slots)
-
-
 
         x = spatial_broadcast(slots, self.decoder_initial_size)
         x = self.dec_emb(x)
@@ -111,20 +100,13 @@ class SlotAttentionAE(pl.LightningModule):
         masks = F.softmax(masks, dim=1)
         recons = recons * masks
         result = torch.sum(recons, dim=1)
-        return result, recons, kl_loss, masks
+        return result, recons, kl_loss
 
     def step(self, batch):
-        # a = 'A'*10
-        # sys.stderr.write(a + "BATCH LEN" + str(len(batch)))
-        # print("aaa", file=sys.stderr, flush=True)
-
         imgs = batch['image']
-        sys.stderr.write("\nimg shape:\n " + str(imgs.shape))
-        result, _, kl_loss, _ = self(imgs)
+        result, _, kl_loss = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
-
-
 
     def training_step(self, batch, batch_idx):
         optimizer = self.optimizers()
@@ -132,24 +114,10 @@ class SlotAttentionAE(pl.LightningModule):
         optimizer = optimizer.optimizer
 
         loss, kl_loss = self.step(batch)
-
         self.log('Training MSE', loss)
-        self.log('Training KL', kl_loss)
-        # print("TRAINING STEP: ", batch_idx, file=sys.stderr, flush=True)
-        # if batch_idx == 0:
-        #     imgs = batch['image'][:8]
-        #     result, recons, _, pred_masks = self(imgs)
-        #     if self.dataset == 'clevr-mirror':
-        #         self.trainer.logger.experiment.log({
-        #             'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
-        #             'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-        #             # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
-        #             # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
-        #         })
-        #         self.trainer.logger.experiment.log({
-        #             f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
-        #             for i in range(self.num_slots)
-        #         })
+        if self.quantization:
+            self.log('Training KL', kl_loss)
+
         loss = loss + kl_loss * self.beta
         optimizer.zero_grad()
         loss.backward()
@@ -166,27 +134,18 @@ class SlotAttentionAE(pl.LightningModule):
 
         if batch_idx == 0:
             imgs = batch['image'][:8]
-            # print("img: ", imgs.shape, file=sys.stderr, flush=True)
             if self.dataset == 'clevr-tex':
                 true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
-
-            # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-            # print("TRUE: ", true_masks[true_masks > 0], file=sys.stderr, flush=True)
-            # print("PRED: ", pred_masks, file=sys.stderr, flush=True)
-
             self.trainer.logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
-                'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)],
-                # 'true_masks': [wandb.Image(x) for x in torch.unsqueeze(true_masks, dim=-1)],
-                # 'pred_masks': [wandb.Image(x) for x in torch.unsqueeze(pred_masks, dim=-1)]
+                'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
             })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
             })
-
             if self.dataset == 'clevr-tex':
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
