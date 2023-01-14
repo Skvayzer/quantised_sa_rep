@@ -100,7 +100,7 @@ class SlotAttentionAE(pl.LightningModule):
         masks = F.softmax(masks, dim=1)
         recons = recons * masks
         result = torch.sum(recons, dim=1)
-        return result, recons, kl_loss
+        return result, recons, kl_loss, masks
 
     def step(self, batch):
         imgs = batch['image']
