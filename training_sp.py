@@ -121,7 +121,7 @@ elif dataset == 'clevr-tex':
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
     )
     collation = collate_fn
-    num_props = 19
+    num_props = 71
 
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
