@@ -248,7 +248,7 @@ class CLEVRTEX:
             if self.dataset_variant == 'vbg':
                 o['color'] = obj['color']
             obj_vec = torch.cat((coords, size, material, shape, torch.Tensor([[1.]])), dim=1)[0]
-            # print('\n\nAAAA OBJ INFO ', obj, file=sys.stderr, flush=True)
+            print('\n\nAAAA OBJ INFO ', coords.shape, size.shape, material.shape, shape.shape, file=sys.stderr, flush=True)
             # print('\n\nAAAA OBJ_VEC INFO ', obj_vec, file=sys.stderr, flush=True)
 
             target.append(obj_vec)
