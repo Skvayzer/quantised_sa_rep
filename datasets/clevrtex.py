@@ -254,6 +254,7 @@ class CLEVRTEX:
         while len(target) < self.max_obj:
             target.append(torch.zeros(71))
         target = torch.stack(target)
+
         return {
             'target': target
         }
