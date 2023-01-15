@@ -20,7 +20,7 @@ class QuantizedClassifier(pl.LightningModule):
 
     def __init__(self, resolution=(128, 128),
                  num_slots=10, num_iters=3, in_channels=3,
-                 hidden_size=64, slot_size=64, quantization=True, num_props=19,
+                 hidden_size=64, slot_size=64, quantization=True, num_props=19, dataset='',
                  lr=0.00035, coord_scale=1., nums=[8, 3, 2, 2], **kwargs):
         super().__init__()
         self.resolution = resolution
@@ -30,6 +30,7 @@ class QuantizedClassifier(pl.LightningModule):
         self.hidden_size = hidden_size
         self.slot_size = slot_size
         self.coord_scale = coord_scale
+        self.dataset = dataset
         self.quantization = quantization
 
         self.encoder_cnn = Encoder(
@@ -94,11 +95,17 @@ class QuantizedClassifier(pl.LightningModule):
             props = props
             props = self.mlp_prop(props)
 
-            props[:, :, 0:2] = self.smax(props[:, :, 0:2].clone())
-            props[:, :, 2:4] = self.smax(props[:, :, 2:4].clone())
-            props[:, :, 4:7] = self.smax(props[:, :, 4:7].clone())
-            props[:, :, 7:15] = self.smax(props[:, :, 7:15].clone())
-            props[:, :, 15:] = self.sigmoid(props[:, :, 15:].clone())
+            if self.dataset == 'clevr':
+                props[:, :, 0:2] = self.smax(props[:, :, 0:2].clone())
+                props[:, :, 2:4] = self.smax(props[:, :, 2:4].clone())
+                props[:, :, 4:7] = self.smax(props[:, :, 4:7].clone())
+                props[:, :, 7:15] = self.smax(props[:, :, 7:15].clone())
+                props[:, :, 15:] = self.sigmoid(props[:, :, 15:].clone())
+            elif self.dataset == 'clevr-tex':
+                props[:, :, 0:3] = self.smax(props[:, :, 0:3].clone())
+                props[:, :, 3:63] = self.smax(props[:, :, 3:63].clone())
+                props[:, :, 63:67] = self.smax(props[:, :, 63:67].clone())
+                props[:, :, 67:] = self.smax(props[:, :, 67:].clone())
 
             res = torch.cat([coords, props], dim=-1)
         else:
