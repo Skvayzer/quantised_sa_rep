@@ -56,7 +56,7 @@ class QuantizedClassifier(pl.LightningModule):
         self.mlp_prop = nn.Sequential(
             nn.Linear(16 * len(nums), hidden_size),
             nn.ReLU(),
-            nn.Linear(hidden_size, 19 - 3),
+            nn.Linear(hidden_size, num_props - 3),
             # nn.Sigmoid()
         )
 
