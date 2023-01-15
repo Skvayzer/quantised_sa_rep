@@ -159,7 +159,7 @@ print("\n\nATTENTION! quantize: ", args.quantization, '\n\n', file=sys.stderr, f
 # model
 dict_args = vars(args)
 
-classifier = QuantizedClassifier(num_props=num_props, dataset=dataset, **dict_args)
+classifier = QuantizedClassifier(num_props=num_props, **dict_args)
 if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
     classifier.load_from_checkpoint(args.sa_state_dict)
