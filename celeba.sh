@@ -5,7 +5,7 @@
 #SBATCH --gpus-per-task=1
 #SBATCH --cpus-per-task=4
 ##SBATCH --time=0-0:05:00
-#SBATCH --partition=GTX780
+#SBATCH --partition=titan_X
 ##SBATCH --gres=gpu:1
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-gpu=16GB
