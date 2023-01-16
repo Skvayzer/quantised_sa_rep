@@ -132,6 +132,8 @@ elif dataset == 'celeba':
         torchvision.transforms.Resize((128, 128)),
         torchvision.transforms.ToTensor()
     ])
+    print("\n\nATTENTION! celeba path: ", args.train_path, '\n\n', file=sys.stderr, flush=True)
+
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
                            target_transform=transforms, download=False)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
