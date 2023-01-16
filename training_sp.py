@@ -105,7 +105,7 @@ elif dataset == 'clevr-tex':
         args.train_path, # Untar'ed
         dataset_variant='full', # 'full' for main CLEVRTEX, 'outd' for OOD, 'pbg','vbg','grassbg','camo' for variants.
         split='train',
-        max_obj=6,
+        max_obj=10,
         crop=True,
         resize=(128, 128),
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
@@ -115,7 +115,7 @@ elif dataset == 'clevr-tex':
         args.train_path, # Untar'ed
         dataset_variant='full', # 'full' for main CLEVRTEX, 'outd' for OOD, 'pbg','vbg','grassbg','camo' for variants.
         split='val',
-        max_obj=6,
+        max_obj=10,
         crop=True,
         resize=(128, 128),
         return_metadata=True # Useful only for evaluation, wastes time on I/O otherwise
