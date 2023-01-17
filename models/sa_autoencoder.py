@@ -104,9 +104,11 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss, masks
 
     def step(self, batch):
-        print("ATTENTION! batch : ", batch, file=sys.stderr, flush=True)
-
-        imgs = batch['image']
+        # print("ATTENTION! batch : ", batch, file=sys.stderr, flush=True)
+        if self.dataset == "celeba":
+            imgs = batch[0]
+        else:
+            imgs = batch['image']
         result, _, kl_loss, _ = self(imgs)
         loss = F.mse_loss(result, imgs)
         return loss, kl_loss
@@ -136,7 +138,11 @@ class SlotAttentionAE(pl.LightningModule):
         self.log('Validation KL', kl_loss)
 
         if batch_idx == 0:
-            imgs = batch['image'][:8]
+            if self.dataset == "celeba":
+                imgs = batch[0]
+            else:
+                imgs = batch['image']
+            imgs = imgs[:8]
             if self.dataset == 'clevr-tex':
                 true_masks = batch['mask'][:8]
             result, recons, _, pred_masks = self(imgs)
