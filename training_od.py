@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 import argparse
 from datasets import CLEVR, CLEVRTEX, CLEVR_Mirror
 from torchvision.datasets import CelebA
+from datasets import CelebA
 from models import SlotAttentionAE
 import wandb
 from datasets import collate_fn
@@ -131,16 +132,21 @@ elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
         # torchvision.transforms.ToTensor(),
         # torchvision.transforms.ToPILImage(),
-        # torchvision.transforms.Resize((128, 128)),
+        torchvision.transforms.Resize((128, 128)),
         # torchvision.transforms.CenterCrop((128, 128)),
         torchvision.transforms.ToTensor()
     ])
     print("\n\nATTENTION! celeba path: ", args.train_path, '\n\n', file=sys.stderr, flush=True)
 
-    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
-                           target_transform=transforms, download=True)
-    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
-                         target_transform=transforms, download=True)
+    # train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
+    #                        target_transform=transforms, download=True)
+    # val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
+    #                      target_transform=transforms, download=True)
+    train_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
+                           os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'train')
+    val_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
+                           os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'test')
+
 elif dataset == 'tetrominoes':
     train_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_train.npz'))
     val_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_val.npz'))
