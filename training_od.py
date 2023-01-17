@@ -133,7 +133,7 @@ elif dataset == 'celeba':
         # torchvision.transforms.ToPILImage(),
         # torchvision.transforms.Resize((128, 128)),
         # torchvision.transforms.CenterCrop((128, 128)),
-        # torchvision.transforms.ToTensor()
+        torchvision.transforms.ToTensor()
     ])
     print("\n\nATTENTION! celeba path: ", args.train_path, '\n\n', file=sys.stderr, flush=True)
 
