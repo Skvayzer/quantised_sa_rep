@@ -131,7 +131,7 @@ elif dataset == 'clevr-tex':
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
         # torchvision.transforms.ToTensor(),
-        # torchvision.transforms.ToPILImage(),
+        torchvision.transforms.ToPILImage(),
         torchvision.transforms.Resize((128, 128)),
         # torchvision.transforms.CenterCrop((128, 128)),
         torchvision.transforms.ToTensor()
