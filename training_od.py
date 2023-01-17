@@ -131,17 +131,15 @@ elif dataset == 'clevr-tex':
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
         # torchvision.transforms.ToTensor(),
-        torchvision.transforms.ToPILImage(),
+        # torchvision.transforms.ToPILImage(  ),
         torchvision.transforms.Resize((128, 128)),
         # torchvision.transforms.CenterCrop((128, 128)),
         torchvision.transforms.ToTensor()
     ])
     print("\n\nATTENTION! celeba path: ", args.train_path, '\n\n', file=sys.stderr, flush=True)
 
-    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
-                           target_transform=transforms, download=True)
-    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
-                         target_transform=transforms, download=True)
+    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms, download=True)
+    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms, download=True)
     # train_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
     #                        os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'train')
     # val_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
