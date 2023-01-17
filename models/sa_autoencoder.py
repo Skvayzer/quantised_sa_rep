@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pytorch_lightning as pl
 import torch
@@ -103,6 +104,8 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss, masks
 
     def step(self, batch):
+        print("ATTENTION! batch : ", batch, file=sys.stderr, flush=True)
+
         imgs = batch['image']
         result, _, kl_loss, _ = self(imgs)
         loss = F.mse_loss(result, imgs)
