@@ -129,9 +129,9 @@ elif dataset == 'clevr-tex':
     collation = collate_fn
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
-        torchvision.transforms.ToTensor(),
-        torchvision.transforms.ToPILImage(),
-        torchvision.transforms.Resize((128, 128)),
+        # torchvision.transforms.ToTensor(),
+        # torchvision.transforms.ToPILImage(),
+        # torchvision.transforms.Resize((128, 128)),
         # torchvision.transforms.CenterCrop((128, 128)),
         # torchvision.transforms.ToTensor()
     ])
