@@ -139,11 +139,9 @@ elif dataset == 'celeba':
         torchvision.transforms.Resize((128, 128)),
         torchvision.transforms.ToTensor()
     ])
-    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms,
-                           target_transform=transforms, download=False)
-    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms,
-                         target_transform=transforms, download=False)
-    num_props = 19
+    train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms, download=True)
+    val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms, download=True)
+    num_props = 40
 
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
