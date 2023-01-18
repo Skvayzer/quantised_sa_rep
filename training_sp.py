@@ -99,6 +99,7 @@ if dataset == 'clevr':
                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
                         max_objs=10)
     num_props = 19
+    num_slots = 10
 elif dataset == 'clevr-tex':
     # TO-DO: SPECIFY THE AMOUNT OF OBJECTS LIKE DONE ABOVE
     train_dataset = CLEVRTEX(
@@ -122,6 +123,7 @@ elif dataset == 'clevr-tex':
     )
     collation = collate_fn
     num_props = 71
+    num_slots = 10
 
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
@@ -133,6 +135,7 @@ elif dataset == 'clevr-mirror':
 
     train_dataset, val_dataset = torch.utils.data.random_split(clevr_mirror, [train_size, test_size])
     num_props = 19
+    num_slots = 10
 
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
@@ -142,6 +145,7 @@ elif dataset == 'celeba':
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms, download=True)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms, download=True)
     num_props = 40
+    num_slots = 1
 
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
@@ -157,7 +161,7 @@ print("\n\nATTENTION! quantize: ", args.quantization, '\n\n', file=sys.stderr, f
 # model
 dict_args = vars(args)
 
-classifier = QuantizedClassifier(num_props=num_props, **dict_args)
+classifier = QuantizedClassifier(num_props=num_props, num_slots=num_slots, **dict_args)
 if args.pretrained:
     # state_dict = torch.load(args.sa_state_dict)['state_']
     classifier.load_from_checkpoint(args.sa_state_dict)

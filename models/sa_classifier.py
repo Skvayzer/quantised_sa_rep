@@ -95,7 +95,7 @@ class QuantizedClassifier(pl.LightningModule):
             props = props
             props = self.mlp_prop(props)
 
-            if self.dataset == 'clevr':
+            if self.dataset == 'clevr' or self.dataset == 'clevr-mirror':
                 props[:, :, 0:2] = self.smax(props[:, :, 0:2].clone())
                 props[:, :, 2:4] = self.smax(props[:, :, 2:4].clone())
                 props[:, :, 4:7] = self.smax(props[:, :, 4:7].clone())
@@ -119,6 +119,7 @@ class QuantizedClassifier(pl.LightningModule):
         if self.dataset == "celeba":
             images = batch[0]
             targets = batch[1]
+            targets = torch.unsqueeze(targets, dim=1)
         else:
             images = batch['image']
             targets = batch['target']
