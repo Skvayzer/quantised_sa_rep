@@ -116,8 +116,13 @@ class QuantizedClassifier(pl.LightningModule):
         }
 
     def step(self, batch, batch_idx, mode='Train'):
-        images = batch['image']
-        targets = batch['target']
+        if self.dataset == "celeba":
+            images = batch[0]
+            targets = batch[1]
+        else:
+            images = batch['image']
+            targets = batch['target']
+
         print("\n\nAAAAAAAAAAAAAAAAATARGET: ", targets, file=sys.stderr, flush=True)
 
         print("\n\nAAAAAAAAAAAAAAAAATARGET: ", targets.shape, file=sys.stderr, flush=True)
