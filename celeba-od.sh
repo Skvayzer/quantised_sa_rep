@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_od_celeba_40_end_to_end
+#SBATCH --job-name=quantised_sa_od_celeba_40_bin2_end_to_end
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
