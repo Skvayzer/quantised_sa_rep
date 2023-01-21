@@ -100,6 +100,7 @@ if dataset == 'clevr':
     #                     max_objs=6)
     #max 6 objects
     transforms = torchvision.transforms.Compose([
+        torchvision.transforms.ToPILImage(),
         torchvision.transforms.Resize((128, 128)),
         torchvision.transforms.ToTensor()
     ])
