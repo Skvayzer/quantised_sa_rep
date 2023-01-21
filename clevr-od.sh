@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_od_clevr_end_to_end
+#SBATCH --job-name=quantised_sa_od_clevr_end_to_end_masked
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -17,9 +17,9 @@
 singularity instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
-                     ml_env.sif ml_env1
+                     ml_env.sif ml_env
 
-singularity exec instance://ml_env1 /bin/bash -c "
+singularity exec instance://ml_env /bin/bash -c "
       source /miniconda/etc/profile.d/conda.sh;
       conda activate ml_env;
       export WANDB_API_KEY=c84312b58e94070d15277f8a5d58bb72e57be7fd;
