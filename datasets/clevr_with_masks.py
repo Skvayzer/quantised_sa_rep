@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +18,8 @@ class CLEVRwithMasks(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx):
+        print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         image = self.transform(self.images[idx])
         mask = self.transform(self.masks[idx])
 
