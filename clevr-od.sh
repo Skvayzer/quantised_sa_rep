@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_single_dim_od_clevr_end_to_end
+#SBATCH --job-name=quantised_sa_od_clevr_end_to_end
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -17,7 +17,7 @@
 singularity instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
-                     ml_env.sif ml_env
+                     ml_env.sif ml_env1
 
 singularity exec instance://ml_env /bin/bash -c "
       source /miniconda/etc/profile.d/conda.sh;
@@ -29,7 +29,7 @@ singularity exec instance://ml_env /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr' --task 'od_enc_to_end' --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr" --seed 0 --nums 15 --num_workers 4;
+      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr' --task 'od_enc_to_end' --device 'gpu' --max_epochs 2000 --batch_size 32 --train_path "/home/quantised_sa/datasets/clevr" --val-path "" --seed 0 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 

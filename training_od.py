@@ -24,7 +24,8 @@ from torchvision.datasets import CelebA
 from models import SlotAttentionAE
 import wandb
 from datasets import collate_fn
-from datasets import MultiDSprites
+from datasets import MultiDSprites, CLEVRwithMasks
+
 
 # ------------------------------------------------------------
 # Constants
@@ -44,6 +45,8 @@ program_parser.add_argument("--log_model", default=True)
 
 # dataset parameters
 program_parser.add_argument("--train_path", type=str)
+program_parser.add_argument("--val_path", type=str)
+
 program_parser.add_argument("--dataset", type=str)
 
 # Experiment parameters
@@ -92,9 +95,11 @@ if dataset == 'clevr':
                           scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
                           max_objs=6)
 
-    val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
-                        scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
-                        max_objs=6)
+    # val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
+    #                     scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
+    #                     max_objs=6)
+    #max 6 objects
+    val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz '))
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'scenes'),
