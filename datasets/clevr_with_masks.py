@@ -28,8 +28,8 @@ class CLEVRwithMasks(Dataset):
     def __getitem__(self, idx):
 
 
-        print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
-        print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
+        # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
+        # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         image = self.image_transform(self.images[idx])
         mask = self.mask_transform(self.masks[idx])
 
