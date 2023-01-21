@@ -107,9 +107,9 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss, masks
 
     def step(self, batch):
-        print("\n\nATTENTION! batch : ", batch, file=sys.stderr, flush=True)
-        print("\n\nATTENTION! batch : ", batch['image'].shape, file=sys.stderr, flush=True)
-        print("\n\nATTENTION! batch : ", batch['mask'].shape, file=sys.stderr, flush=True)
+        # print("\n\nATTENTION! batch : ", batch, file=sys.stderr, flush=True)
+        # print("\n\nATTENTION! batch : ", batch['image'].shape, file=sys.stderr, flush=True)
+        # print("\n\nATTENTION! batch : ", batch['mask'].shape, file=sys.stderr, flush=True)
         if self.dataset == "celeba":
             imgs = batch[0]
         else:
@@ -163,7 +163,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
-                # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+                print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
                 self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
