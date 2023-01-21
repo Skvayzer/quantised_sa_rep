@@ -107,7 +107,9 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss, masks
 
     def step(self, batch):
-        # print("ATTENTION! batch : ", batch, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! batch : ", batch, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! batch : ", batch['image'].shape, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! batch : ", batch['mask'].shape, file=sys.stderr, flush=True)
         if self.dataset == "celeba":
             imgs = batch[0]
         else:
