@@ -5,10 +5,11 @@ import torch
 from torch.utils.data import Dataset
 
 class CLEVRwithMasks(Dataset):
-    def __init__(self, path_to_dataset):
+    def __init__(self, path_to_dataset, transform):
         data = np.load(path_to_dataset)
         self.masks = data['masks']
         self.images = data['images']
+        self.transform = transform
         # self.visibility = data['visibility']
         self.image_size = self.images[0].shape
 
@@ -16,8 +17,9 @@ class CLEVRwithMasks(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx):
-        image = self.images[idx]
-        mask = self.masks[idx]
+        image = self.transform(self.images[idx])
+        mask = self.transform(self.masks[idx])
+
         image = torch.from_numpy(image).float() / 255
         return {
             'image': image,
