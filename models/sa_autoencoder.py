@@ -150,7 +150,7 @@ class SlotAttentionAE(pl.LightningModule):
             imgs = imgs[:8]
             if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8]
-                print("ATTENTION! MASKS (true/pred): ", true_masks, file=sys.stderr, flush=True)
+                print("ATTENTION! true MASKS: ", true_masks, file=sys.stderr, flush=True)
 
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
@@ -158,11 +158,11 @@ class SlotAttentionAE(pl.LightningModule):
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
             })
-            if self.dataset in ['clevr-tex', 'clevr']:
-                self.trainer.logger.experiment.log({
-                    f'{i} mask': [wandb.Image(x*255 / 2 + 0.5) for x in torch.clamp(true_masks[:, i], -1, 1)]
-                    for i in range(self.num_slots)
-                })
+            # if self.dataset in ['clevr-tex', 'clevr']:
+            #     self.trainer.logger.experiment.log({
+            #         f'{i} mask': [wandb.Image(x*255 / 2 + 0.5) for x in torch.clamp(true_masks[:, i], -1, 1)]
+            #         for i in range(self.num_slots)
+            #     })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
