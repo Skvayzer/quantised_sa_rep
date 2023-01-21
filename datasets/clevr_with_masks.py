@@ -7,8 +7,8 @@ from torch.utils.data import Dataset
 class CLEVRwithMasks(Dataset):
     def __init__(self, path_to_dataset):
         data = np.load(path_to_dataset)
-        self.masks = data['mask']
-        self.images = data['image']
+        self.masks = data['masks']
+        self.images = data['images']
         self.visibility = data['visibility']
         self.image_size = self.images[0].shape
 
