@@ -9,7 +9,7 @@ class CLEVRwithMasks(Dataset):
         data = np.load(path_to_dataset)
         self.masks = data['masks']
         self.images = data['images']
-        self.visibility = data['visibility']
+        # self.visibility = data['visibility']
         self.image_size = self.images[0].shape
 
     def __len__(self):
