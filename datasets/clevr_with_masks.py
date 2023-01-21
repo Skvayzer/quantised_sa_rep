@@ -20,8 +20,7 @@ class CLEVRwithMasks(Dataset):
             torchvision.transforms.ToTensor()
         ])
         self.mask_transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize(resize),
-            torchvision.transforms.ToTensor()
+            torchvision.transforms.Resize(resize)
         ])
     def __len__(self):
         return len(self.images)
