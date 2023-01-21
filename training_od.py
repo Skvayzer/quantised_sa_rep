@@ -99,7 +99,7 @@ if dataset == 'clevr':
     #                     scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
     #                     max_objs=6)
     #max 6 objects
-    val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz '))
+    val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz'))
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'scenes'),
