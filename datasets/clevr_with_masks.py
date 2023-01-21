@@ -33,7 +33,7 @@ class CLEVRwithMasks(Dataset):
         image = self.image_transform(self.images[idx])
         mask = self.mask_transform(self.masks[idx])
 
-        image = torch.from_numpy(image).float() / 255
+        image = image.float() / 255
         return {
             'image': image,
             'mask': mask
