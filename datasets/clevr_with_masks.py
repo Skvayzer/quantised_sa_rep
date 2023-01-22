@@ -34,6 +34,7 @@ class CLEVRwithMasks(Dataset):
         mask = self.mask_transform(self.masks[idx])
 
         image = image.float() / 255
+        mask = mask.float() / 255
         return {
             'image': image,
             'mask': mask

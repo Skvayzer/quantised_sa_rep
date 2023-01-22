@@ -165,7 +165,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 self.trainer.logger.experiment.log({
                     f'{i} mask': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(true_masks[:, i], -1, 1)]
-                    for i in range(self.num_slots)
+                    for i in range(11)
                 })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
