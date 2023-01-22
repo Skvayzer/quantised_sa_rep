@@ -150,7 +150,9 @@ class SlotAttentionAE(pl.LightningModule):
             imgs = imgs[:8]
             if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8]
-                print("ATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
+                print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
+                print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
+
 
             result, recons, _, pred_masks = self(imgs)
             pred_masks = torch.squeeze(pred_masks)
