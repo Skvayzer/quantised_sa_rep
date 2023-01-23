@@ -68,7 +68,7 @@ class SlotAttentionAE(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(hidden_size, slot_size)
         )
-        self.slots_lin = nn.Linear(16 * len(nums) + 64, hidden_size)
+        self.slots_lin = nn.Linear(16 * len(nums), hidden_size)
 
         self.slot_attention = SlotAttentionBase(num_slots=num_slots, iters=num_iters, dim=slot_size,
                                                 hidden_dim=slot_size * 2)
@@ -92,8 +92,9 @@ class SlotAttentionAE(pl.LightningModule):
         kl_loss = 0
         if self.quantization:
             props, coords, kl_loss = self.coord_quantizer(slots)
-            print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
-            slots = torch.cat([props, coords], dim=-1)
+            # print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
+
+            slots = torch.cat([props], dim=-1)
             slots = self.slots_lin(slots)
 
         x = spatial_broadcast(slots, self.decoder_initial_size)
