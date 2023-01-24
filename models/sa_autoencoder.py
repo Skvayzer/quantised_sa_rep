@@ -81,6 +81,8 @@ class SlotAttentionAE(pl.LightningModule):
 
     def forward(self, inputs):
         x = self.encoder(inputs)
+        print("\n\nATTENTION! after encoder shape : ", x.shape, file=sys.stderr, flush=True)
+
         x = self.enc_emb(x)
 
         x = spatial_flatten(x[0])
