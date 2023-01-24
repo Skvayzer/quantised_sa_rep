@@ -53,7 +53,7 @@ class SlotAttentionAE(pl.LightningModule):
             nn.Conv2d(in_channels, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU(),
             *[nn.Sequential(nn.Conv2d(hidden_size, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU()) for _ in
               range(2)],
-            nn.Conv2d(in_channels, 64, kernel_size=5, padding=(2, 2)), nn.ReLU(),
+            nn.Conv2d(hidden_size, 64, kernel_size=5, padding=(2, 2)), nn.ReLU(),
         )
         self.decoder_initial_size = (8, 8)
 
