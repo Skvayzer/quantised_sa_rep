@@ -152,8 +152,8 @@ elif dataset == 'celeba':
     #                        os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'test')
 
 elif dataset == 'tetrominoes':
-    train_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_train.npz'))
-    val_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_val.npz'))
+    train_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_train.npz'), mode='tetraminoes')
+    val_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_val.npz'), mode='tetraminoes')
 
 train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True,
                           drop_last=True, collate_fn=collation)
