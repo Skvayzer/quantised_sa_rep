@@ -17,9 +17,9 @@
 singularity instance start \
                      --nv  \
                      --bind /home/AI/yudin.da/smirnov_cv/quantised_sa:/home/quantised_sa \
-                     ml_env.sif ml_env4
+                     ml_env.sif ml_env5
 
-singularity exec instance://ml_env4 /bin/bash -c "
+singularity exec instance://ml_env5 /bin/bash -c "
       source /miniconda/etc/profile.d/conda.sh;
       conda activate ml_env;
       export WANDB_API_KEY=c84312b58e94070d15277f8a5d58bb72e57be7fd;
@@ -29,8 +29,8 @@ singularity exec instance://ml_env4 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_sp.py --dataset 'clevr-mirror' --no-quantization --from_checkpoint '/home/quantised_sa/set_prediction_clevr-mirror/1ey6813k/checkpoints/epoch=139-step=368340.ckpt' --task 'sa_end_to_end' --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 0 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/training_sp.py --dataset 'clevr-mirror' --no-quantization --from_checkpoint '/home/quantised_sa/set_prediction_clevr-mirror/wwszmswe/checkpoints/epoch=209-step=552510.ckpt' --task 'sa_end_to_end' --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 0 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
-singularity instance stop ml_env4
+singularity instance stop ml_env5
