@@ -69,7 +69,7 @@ class SlotAttentionAE(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(hidden_size, slot_size)
         )
-        self.slots_lin = nn.Linear(16 * len(nums) + 64, hidden_size)
+        self.slots_lin = nn.Linear(16 * len(nums) * 2, hidden_size)
 
         self.slot_attention = SlotAttentionBase(num_slots=num_slots, iters=num_iters, dim=slot_size,
                                                 hidden_dim=slot_size * 2)
@@ -97,7 +97,7 @@ class SlotAttentionAE(pl.LightningModule):
             props, coords, kl_loss = self.coord_quantizer(slots)
             print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
 
-            slots = torch.cat([props, coords], dim=-1)
+            slots = torch.cat([props, props], dim=-1)
             slots = self.slots_lin(slots)
 
         x = spatial_broadcast(slots, self.decoder_initial_size)
@@ -167,11 +167,11 @@ class SlotAttentionAE(pl.LightningModule):
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
             })
-            if self.dataset in ['clevr-tex', 'clevr']:
-                self.trainer.logger.experiment.log({
-                    f'{i} mask': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(true_masks[:, i], -1, 1)]
-                    for i in range(self.num_slots-1)
-                })
+            # if self.dataset in ['clevr-tex', 'clevr']:
+            #     self.trainer.logger.experiment.log({
+            #         f'{i} mask': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(true_masks[:, i], -1, 1)]
+            #         for i in range(self.num_slots-1)
+            #     })
             self.trainer.logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
