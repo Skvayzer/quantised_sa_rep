@@ -1,3 +1,4 @@
+import os
 import sys
 from operator import mod
 from shutil import ExecError
@@ -20,7 +21,7 @@ class QuantizedClassifier(pl.LightningModule):
 
     def __init__(self, resolution=(128, 128),
                  num_slots=10, num_iters=3, in_channels=3,
-                 hidden_size=64, slot_size=64, quantization=True, num_props=19, dataset='',
+                 hidden_size=64, slot_size=64, quantization=True, num_props=19, dataset='', task='',
                  lr=0.00035, coord_scale=1., nums=[8, 3, 2, 2], **kwargs):
         super().__init__()
         self.resolution = resolution
@@ -31,6 +32,7 @@ class QuantizedClassifier(pl.LightningModule):
         self.slot_size = slot_size
         self.coord_scale = coord_scale
         self.dataset = dataset
+        self.task = task
         self.quantization = quantization
 
         self.encoder_cnn = Encoder(
@@ -207,6 +209,11 @@ class QuantizedClassifier(pl.LightningModule):
         scheduler = lr_scheduler.OneCycleLR(
             optimizer, max_lr=self.hparams["lr"], total_steps=self.trainer.estimated_stepping_batches, pct_start=0.05)
         return [optimizer], [scheduler]
+
+    def validation_epoch_end(self, outputdata):
+        if self.current_epoch % 10 == 0:
+            save_path = "./sa_classifier_end_to_end/" + f'{self.dataset}' + '/' + f'{self.task}'
+            self.trainer.save_checkpoint(os.path.join(save_path, f"{self.current_epoch}_{self.task}_{self.dataset}_sp_pretrained.ckpt"))
 
 
 if __name__ == "__main__":
