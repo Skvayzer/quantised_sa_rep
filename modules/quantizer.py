@@ -10,7 +10,11 @@ def get_grid(n):
     x = np.linspace(0, 1.5, n)
     y = np.linspace(0, 1.5, n)
     z = np.linspace(0, 1.5, n)
-    grid = np.meshgrid(x, y, z)
+    # color = np.linspace(0, 1.5, n)
+    # shape = np.linspace(0, 1.5, n)
+    # size = np.linspace(0, 1.5, n)
+    # material = np.linspace(0, 1.5, n)
+    grid = np.meshgrid(x, y, z) #, color, shape, size, material)
     grid = np.stack(grid, axis=-1)
     return grid
 
