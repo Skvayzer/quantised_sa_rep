@@ -26,8 +26,6 @@ class CLEVRwithMasks(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx):
-
-
         # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         image = self.image_transform(self.images[idx])
@@ -36,6 +34,6 @@ class CLEVRwithMasks(Dataset):
         image = image.float() / 255
         mask = mask.float() / 255
         return {
-            'image': image,
+            'image': image * 2 - 1,
             'mask': mask
         }
