@@ -52,7 +52,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.encoder = nn.Sequential(
             nn.Conv2d(in_channels, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU(),
             *[nn.Sequential(nn.Conv2d(hidden_size, hidden_size, kernel_size=5, padding=(2, 2)), nn.ReLU()) for _ in
-              range(3)],
+              range(3)]
         )
         self.decoder_initial_size = (8, 8)
 
@@ -81,8 +81,6 @@ class SlotAttentionAE(pl.LightningModule):
 
     def forward(self, inputs):
         x = self.encoder(inputs)
-        print("\n\nATTENTION! after encoder shape : ", x.shape, file=sys.stderr, flush=True)
-
         x = self.enc_emb(x)
 
         x = spatial_flatten(x[0])
@@ -94,7 +92,7 @@ class SlotAttentionAE(pl.LightningModule):
         kl_loss = 0
         if self.quantization:
             props, coords, kl_loss = self.coord_quantizer(slots)
-            print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
+            # print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
 
             slots = torch.cat([props, coords], dim=-1)
             slots = self.slots_lin(slots)
@@ -111,9 +109,6 @@ class SlotAttentionAE(pl.LightningModule):
         return result, recons, kl_loss, masks
 
     def step(self, batch):
-        # print("\n\nATTENTION! batch : ", batch, file=sys.stderr, flush=True)
-        # print("\n\nATTENTION! batch : ", batch['image'].shape, file=sys.stderr, flush=True)
-        # print("\n\nATTENTION! batch : ", batch['mask'].shape, file=sys.stderr, flush=True)
         if self.dataset == "celeba":
             imgs = batch[0]
         else:
@@ -154,8 +149,8 @@ class SlotAttentionAE(pl.LightningModule):
             imgs = imgs[:8]
             if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8][:, 1:self.num_slots, :, :]
-                print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
-                print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
+                # print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
+                # print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
 
 
             result, recons, _, pred_masks = self(imgs)
@@ -178,7 +173,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
-                print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+                # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
                 self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
