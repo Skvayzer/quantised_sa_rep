@@ -171,8 +171,6 @@ dict_args = vars(args)
 if dataset == 'tetrominoes':
     autoencoder = SlotAttentionAE(resolution=(35, 35), hidden_size = 32, decoder_initial_size=(35, 35),
                      num_slots=4, **dict_args)
-elif dataset == 'clevr-mirror':
-    autoencoder = SlotAttentionAE(**dict_args)
 else:
     autoencoder = SlotAttentionAE(**dict_args)
 
