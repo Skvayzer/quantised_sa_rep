@@ -147,7 +147,7 @@ class SlotAttentionAE(pl.LightningModule):
             else:
                 imgs = batch['image']
             imgs = imgs[:8]
-            if self.dataset in ['clevr-tex']:
+            if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8][:, 1:self.num_slots, :, :]
                 # print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
                 # print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
@@ -170,7 +170,7 @@ class SlotAttentionAE(pl.LightningModule):
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(self.num_slots)
             })
-            if self.dataset in ['clevr-tex']:
+            if self.dataset in ['clevr-tex', 'clevr']:
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
                 # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
