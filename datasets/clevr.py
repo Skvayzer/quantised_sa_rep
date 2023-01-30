@@ -63,7 +63,7 @@ class CLEVR(Dataset):
             while len(target) < self.max_objs:
                 target.append(torch.zeros(19))
             target = torch.stack(target)
-        print("\n\nATTENTION! clevr image max/min: ", max(img), min(img), file=sys.stderr, flush=True)
+        print("\n\nATTENTION! clevr image max/min: ", torch.max(img), torch.min(img), file=sys.stderr, flush=True)
 
         return {
             'image': img*2 - 1,
