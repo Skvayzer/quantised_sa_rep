@@ -1,3 +1,5 @@
+import sys
+
 import torch.nn.functional as F
 import torch
 from torch.utils.data import Dataset
@@ -61,6 +63,8 @@ class CLEVR(Dataset):
             while len(target) < self.max_objs:
                 target.append(torch.zeros(19))
             target = torch.stack(target)
+        print("\n\nATTENTION! clevr image max/min: ", max(img), min(img), file=sys.stderr, flush=True)
+
         return {
             'image': img*2 - 1,
             'target': target
