@@ -33,6 +33,8 @@ class CLEVRwithMasks(Dataset):
 
         # image = image.float() / 255
         print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
+        print("\n\nATTENTION! clevr with masks mask max/min: ", torch.max(mask), torch.min(mask), file=sys.stderr, flush=True)
+
         mask = mask.float() / 255
         return {
             'image': image * 2 - 1,
