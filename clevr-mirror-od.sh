@@ -29,7 +29,7 @@ singularity exec instance://ml_env1 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr-mirror' --task 'clevr mirror vanilla 16:34 26.01.2023' --beta 0 --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 77 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr-mirror' --task 'clevr mirror vanilla 22:00 31.01.2023' --beta 1 --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 77 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 

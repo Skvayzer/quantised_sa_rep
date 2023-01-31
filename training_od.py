@@ -115,7 +115,6 @@ elif dataset == 'clevr-mirror':
 
 
 elif dataset == 'clevr-tex':
-    # TO-DO: SPECIFY THE AMOUNT OF OBJECTS LIKE DONE ABOVE
     train_dataset = CLEVRTEX(
         args.train_path, # Untar'ed
         dataset_variant='full', # 'full' for main CLEVRTEX, 'outd' for OOD, 'pbg','vbg','grassbg','camo' for variants.
@@ -138,20 +137,14 @@ elif dataset == 'clevr-tex':
     collation = collate_fn
 elif dataset == 'celeba':
     transforms = torchvision.transforms.Compose([
-        # torchvision.transforms.ToTensor(),
-        # torchvision.transforms.ToPILImage(  ),
         torchvision.transforms.Resize((128, 128)),
-        # torchvision.transforms.CenterCrop((128, 128)),
         torchvision.transforms.ToTensor()
     ])
     print("\n\nATTENTION! celeba path: ", args.train_path, '\n\n', file=sys.stderr, flush=True)
 
     train_dataset = CelebA(root=args.train_path, split='train', target_type='attr', transform=transforms, download=True)
     val_dataset = CelebA(root=args.train_path, split='valid', target_type='attr', transform=transforms, download=True)
-    # train_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
-    #                        os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'train')
-    # val_dataset = CelebA(os.path.join(args.train_path, "celeba", "img_align_celeba"),
-    #                        os.path.join(args.train_path, "celeba", "list_attr_celeba.txt"), transforms, 'test')
+
 
 elif dataset == 'tetrominoes':
     train_dataset = MultiDSprites(path_to_dataset=(args.train_path + '/tetrominoes_train.npz'), mode='tetraminoes')
