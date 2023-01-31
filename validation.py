@@ -178,10 +178,13 @@ callbacks = [
 ]
 
 
-# checkpoint = torch.load(args.from_checkpoint)['model_state_dict']
+checkpoint = torch.load(args.from_checkpoint)['model_state_dict']
 
-# if len(args.from_checkpoint) > 0:
-#     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
+if len(args.from_checkpoint) > 0:
+    autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
+
+image = next(iter(val_loader))
+result, recons, _, pred_masks = autoencoder(image)
 
 # ------------------------------------------------------------
 # Trainer
@@ -194,14 +197,14 @@ gpus = [0]
 
 print(torch.cuda.device_count(), flush=True)
 
-# trainer
-trainer = pl.Trainer(accelerator=accelerator,
-                     devices=[0],
-                     max_epochs=args.max_epochs,
-                     profiler=profiler,
-                     callbacks=callbacks,
-                     logger=wandb_logger,
-                     )
+# # trainer
+# trainer = pl.Trainer(accelerator=accelerator,
+#                      devices=[0],
+#                      max_epochs=args.max_epochs,
+#                      profiler=profiler,
+#                      callbacks=callbacks,
+#                      logger=wandb_logger,
+#                      )
 
 
 if not len(args.from_checkpoint):
@@ -213,5 +216,5 @@ if not len(args.from_checkpoint):
 #             })
 
 # Test
-trainer.validate(dataloaders=val_loader, ckpt_path=args.from_checkpoint)
+# trainer.validate(dataloaders=val_loader, ckpt_path=args.from_checkpoint)
 wandb.finish()
