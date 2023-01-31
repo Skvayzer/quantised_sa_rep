@@ -184,7 +184,8 @@ checkpoint = torch.load(args.from_checkpoint)['state_dict']
 if len(args.from_checkpoint) > 0:
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
 
-image = next(iter(val_loader))['image'].gpu()
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+image = next(iter(val_loader))['image'].to(device)
 result, recons, _, pred_masks = autoencoder(image)
 
 # ------------------------------------------------------------
