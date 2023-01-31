@@ -213,5 +213,5 @@ if not len(args.from_checkpoint):
 #             })
 
 # Test
-trainer.test(dataloaders=val_loader, ckpt_path=args.from_checkpoint)
+trainer.validate(dataloaders=val_loader, ckpt_path=args.from_checkpoint)
 wandb.finish()
