@@ -188,14 +188,22 @@ if len(args.from_checkpoint) > 0:
 
 imgs = next(iter(val_loader))['image'].to(device)
 
-result, _, _, _ = autoencoder(imgs)
-altered_result, _, _, _ = autoencoder(imgs, test=True)
+result, recons, _, _ = autoencoder(imgs)
+altered_result, altered_recons, _, _ = autoencoder(imgs, test=True)
 
 
 wandb_logger.experiment.log({
                 # 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'altered': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_result, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
+            })
+wandb_logger.experiment.log({
+                f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
+                for i in range(7)
+            })
+wandb_logger.experiment.log({
+                f'{i} altered slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_recons[:, i], -1, 1)]
+                for i in range(7)
             })
 
 # ------------------------------------------------------------
