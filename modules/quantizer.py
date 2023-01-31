@@ -1,3 +1,5 @@
+import sys
+
 from torch import nn, einsum
 import torch
 from torch.nn import functional as F
@@ -115,7 +117,10 @@ class CoordQuantizer(nn.Module):
         quantized_coord = self.use_coord_indices(indices_coord, vecs)
 
         indices, kl_p, p_dis, p_samples = self.get_indices(inputs)
+        print("\n\nATTENTION! indices: ", indices, len(indices), file=sys.stderr, flush=True)
         quantized = self.use_indices(indices)
+        print("\n\nATTENTION! quantized: ", quantized, quantized.shape, file=sys.stderr, flush=True)
+
 
         # loss = (kl_c + kl_p) / 5
         # just properties
