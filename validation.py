@@ -178,8 +178,8 @@ callbacks = [
 ]
 
 
-checkpoint = torch.load(args.from_checkpoint)
-print("\n\nATTENTION! ckpt: ", checkpoint, file=sys.stderr, flush=True)
+checkpoint = torch.load(args.from_checkpoint)['state_dict']
+# print("\n\nATTENTION! ckpt: ", checkpoint, file=sys.stderr, flush=True)
 
 if len(args.from_checkpoint) > 0:
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
