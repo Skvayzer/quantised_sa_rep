@@ -142,12 +142,14 @@ print("\n\nATTENTION! quantize: ", args.quantization, '\n\n', file=sys.stderr, f
 # model
 dict_args = vars(args)
 
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 if dataset == 'tetrominoes':
     autoencoder = SlotAttentionAE(resolution=(35, 35), hidden_size = 32, decoder_initial_size=(35, 35),
                      num_slots=4, **dict_args)
 else:
     autoencoder = SlotAttentionAE(**dict_args)
-
+autoencoder = autoencoder.to(device)
 project_name = 'object_detection_' + dataset
 
 wandb_logger = WandbLogger(project=project_name, name=f'{args.task}: nums {args.nums!r} s {args.seed} kl {args.beta}',
@@ -184,8 +186,7 @@ checkpoint = torch.load(args.from_checkpoint)['state_dict']
 if len(args.from_checkpoint) > 0:
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-image = next(iter(val_loader))['image'].cpu()
+image = next(iter(val_loader))['image'].to(device)
 result, recons, _, pred_masks = autoencoder(image)
 
 # ------------------------------------------------------------
