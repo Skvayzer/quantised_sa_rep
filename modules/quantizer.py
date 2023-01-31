@@ -110,7 +110,7 @@ class CoordQuantizer(nn.Module):
             # res.append(torch.matmul(ind, self.emb_spaces))
         return torch.cat(res, dim=-1)
 
-    def forward(self, inputs):
+    def forward(self, inputs, test=False):
         vecs = self.linear(self.grid1).reshape(-1, 64).to(inputs.device)
 
         indices_coord, kl_c, c_dis, c_samples = self.get_coord_indices(inputs, vecs)
@@ -118,7 +118,8 @@ class CoordQuantizer(nn.Module):
 
         indices, kl_p, p_dis, p_samples = self.get_indices(inputs)
         print("\n\nATTENTION! indices: ", indices[0], indices[0].shape, indices[1].shape, file=sys.stderr, flush=True)
-        indices[0][:, 0, :] = torch.cat((torch.ones((48, 1)), torch.zeros((48, 7))), dim=1)
+        if test:
+            indices[0][:, 0, :] = torch.cat((torch.ones((48, 1)), torch.zeros((48, 7))), dim=1)
         quantized = self.use_indices(indices)
         print("\n\nATTENTION! quantized: ", quantized.shape, file=sys.stderr, flush=True)
 

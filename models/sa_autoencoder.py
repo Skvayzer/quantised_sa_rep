@@ -79,7 +79,7 @@ class SlotAttentionAE(pl.LightningModule):
         self.beta = beta
         self.save_hyperparameters()
 
-    def forward(self, inputs):
+    def forward(self, inputs, test=False):
         x = self.encoder(inputs)
         x = self.enc_emb(x)
 
@@ -91,7 +91,7 @@ class SlotAttentionAE(pl.LightningModule):
 
         kl_loss = 0
         if self.quantization:
-            props, coords, kl_loss = self.coord_quantizer(slots)
+            props, coords, kl_loss = self.coord_quantizer(slots, test)
             # print("\n\nATTENTION! props/coords : ", props.shape, coords.shape, file=sys.stderr, flush=True)
 
             slots = torch.cat([props, coords], dim=-1)
