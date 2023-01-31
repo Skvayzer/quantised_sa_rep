@@ -199,11 +199,11 @@ wandb_logger.experiment.log({
             })
 wandb_logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
-                for i in range(7)
+                for i in range(1)
             })
 wandb_logger.experiment.log({
                 f'{i} altered slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_recons[:, i], -1, 1)]
-                for i in range(7)
+                for i in range(1)
             })
 
 # ------------------------------------------------------------
