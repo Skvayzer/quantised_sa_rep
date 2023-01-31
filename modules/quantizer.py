@@ -117,7 +117,7 @@ class CoordQuantizer(nn.Module):
         quantized_coord = self.use_coord_indices(indices_coord, vecs)
 
         indices, kl_p, p_dis, p_samples = self.get_indices(inputs)
-        print("\n\nATTENTION! indices: ", indices[0].shape, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! indices: ", indices[0], indices[0].shape, indices[1].shape, file=sys.stderr, flush=True)
         quantized = self.use_indices(indices)
         print("\n\nATTENTION! quantized: ", quantized.shape, file=sys.stderr, flush=True)
 
