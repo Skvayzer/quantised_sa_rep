@@ -186,8 +186,13 @@ checkpoint = torch.load(args.from_checkpoint)['state_dict']
 if len(args.from_checkpoint) > 0:
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
 
-image = next(iter(val_loader))['image'].to(device)
-result, recons, _, pred_masks = autoencoder(image)
+imgs = next(iter(val_loader))['image'].to(device)
+result, recons, _, pred_masks = autoencoder(imgs)
+
+wandb_logger.experiment.log({
+                'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
+                'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
+            })
 
 # ------------------------------------------------------------
 # Trainer
