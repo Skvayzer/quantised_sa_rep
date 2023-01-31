@@ -118,7 +118,7 @@ class CoordQuantizer(nn.Module):
 
         indices, kl_p, p_dis, p_samples = self.get_indices(inputs)
         print("\n\nATTENTION! indices: ", indices[0], indices[0].shape, indices[1].shape, file=sys.stderr, flush=True)
-        indices[0][:, 0, :] = torch.cat((torch.ones((48, 1, 1)), torch.zeros((48, 1, 7))), dim=2)
+        indices[0][:, 0, :] = torch.cat((torch.ones((48, 1)), torch.zeros((48, 7))), dim=1)
         quantized = self.use_indices(indices)
         print("\n\nATTENTION! quantized: ", quantized.shape, file=sys.stderr, flush=True)
 
