@@ -60,6 +60,8 @@ program_parser.add_argument("--beta", type=float, default=2.)
 program_parser.add_argument("--num_workers", type=int, default=4)
 program_parser.add_argument("--task", type=str, default='')
 program_parser.add_argument("--quantization", default=True, action=argparse.BooleanOptionalAction)
+program_parser.add_argument("--alter", default=False, action=argparse.BooleanOptionalAction)
+
 
 
 # Add model specific args
@@ -189,22 +191,28 @@ if len(args.from_checkpoint) > 0:
 imgs = next(iter(val_loader))['image'].to(device)
 
 result, recons, _, _ = autoencoder(imgs)
-altered_result, altered_recons, _, _ = autoencoder(imgs, test=True)
+
+if args.alter:
+    altered_result, altered_recons, _, _ = autoencoder(imgs, test=True)
 
 
 wandb_logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
-                'altered': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_result, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
             })
 wandb_logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(1)
             })
-wandb_logger.experiment.log({
-                f'{i} altered slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_recons[:, i], -1, 1)]
-                for i in range(1)
-            })
+
+if args.alter:
+    wandb_logger.experiment.log({
+        'altered': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_result, -1, 1)],
+    })
+    wandb_logger.experiment.log({
+                    f'{i} altered slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_recons[:, i], -1, 1)]
+                    for i in range(1)
+                })
 
 # ------------------------------------------------------------
 # Trainer
