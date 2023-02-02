@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=sa_od_clevr-mirror_end_to_end
+#SBATCH --job-name=quantized_sa_od_clevr-mirror_val
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -29,7 +29,7 @@ singularity exec instance://ml_env9 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/validation.py --dataset 'clevr-mirror' --task 'slot attention' --no-quantization --from_checkpoint '/home/quantised_sa/sa_autoencoder_end_to_end/clevr-mirror/sa_end_to_end/10_2.0_sa_od_pretrained.ckpt' --beta 2 --device 'gpu' --max_epochs 2000 --batch_size 16 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 29 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/validation.py --dataset 'clevr-mirror' --task 'beta 1 trained' --alter --from_checkpoint '/home/quantised_sa/sa_autoencoder_end_to_end/clevr-mirror/clevr mirror vanilla 22:00 31.01.2023/60_1.0_clevr mirror vanilla 22:00 31.01.2023_clevr-mirror_od_pretrained.ckpt' --beta 2 --device 'gpu' --max_epochs 2000 --batch_size 16 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 29 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
