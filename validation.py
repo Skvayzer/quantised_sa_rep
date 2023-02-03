@@ -24,6 +24,7 @@ from models import SlotAttentionAE
 import wandb
 from datasets import collate_fn
 from datasets import MultiDSprites, CLEVRwithMasks
+from utils import adjusted_rand_index
 
 
 # ------------------------------------------------------------
@@ -188,9 +189,14 @@ checkpoint = torch.load(args.from_checkpoint)['state_dict']
 if len(args.from_checkpoint) > 0:
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
 
-imgs = next(iter(val_loader))['image'].to(device)
+num_slots = 7
+batch = next(iter(val_loader))
+imgs = batch['image'].to(device)
+if args.dataset in ['clevr-tex', 'clevr']:
+    masks = batch['mask'].to(device)
+    true_masks = masks[:, 1:num_slots, :, :]
 
-result, recons, _, _ = autoencoder(imgs)
+result, recons, _, pred_masks = autoencoder(imgs)
 
 if args.alter:
     altered_result, altered_recons, _, _ = autoencoder(imgs, test=True)
@@ -204,7 +210,11 @@ wandb_logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(1)
             })
-
+if args.dataset in ['clevr-tex', 'clevr']:
+    pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
+    true_masks = true_masks.view(*true_masks.shape[:2], -1)
+    # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+    wandb_logger.experiment.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
 if args.alter:
     wandb_logger.experiment.log({
         'altered': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_result, -1, 1)],
