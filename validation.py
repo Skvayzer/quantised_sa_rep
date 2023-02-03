@@ -214,7 +214,7 @@ if args.dataset in ['clevr-tex', 'clevr']:
     pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
     true_masks = true_masks.view(*true_masks.shape[:2], -1)
     # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
-    wandb_logger.experiment.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
+    wandb_logger.experiment.log({'ARI': adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean()})
 if args.alter:
     wandb_logger.experiment.log({
         'altered': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(altered_result, -1, 1)],
