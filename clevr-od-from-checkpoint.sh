@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=quantised_sa_od_clevr_end_to_end_from_sa
+#SBATCH --job-name=quantised_sa_od_clevr_end_to_end_from_sa_beta2
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -29,7 +29,7 @@ singularity exec instance://ml_env1 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr' --pretrained --sa_state_dict './quantised_sa_rep/clevr7_od' --task 'clevr from SA 12:44 05.02.2023' --beta 2 --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr" --val_path "/home/quantised_sa/datasets/clevr_with_masks/clevr_with_masks" --seed 31 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/training_od.py --dataset 'clevr' --pretrained --sa_state_dict './quantised_sa_rep/clevr7_od' --task 'clevr VQ-SA from SA 13:00 05.02.2023' --beta 2 --device 'gpu' --max_epochs 2000 --batch_size 64 --train_path "/home/quantised_sa/datasets/clevr" --val_path "/home/quantised_sa/datasets/clevr_with_masks/clevr_with_masks" --seed 31 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
