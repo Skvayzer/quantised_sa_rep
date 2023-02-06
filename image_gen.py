@@ -162,11 +162,16 @@ project_name = 'object_detection_' + dataset
 monitor = 'Validation MSE'
 
 
-checkpoint = torch.load(args.from_checkpoint)['state_dict']
 # print("\n\nATTENTION! ckpt: ", checkpoint, file=sys.stderr, flush=True)
 
+
 if len(args.from_checkpoint) > 0:
+    checkpoint = torch.load(args.from_checkpoint)['state_dict']
     autoencoder.load_state_dict(state_dict=checkpoint, strict=False)
+elif args.pretrained:
+    state_dict = torch.load(args.sa_state_dict)
+    autoencoder.load_state_dict(state_dict=state_dict, strict=False)
+
 
 num_slots = 7
 count = 0
@@ -176,7 +181,7 @@ for i in range(args.num_batches):
 
     result, recons, _, pred_masks = autoencoder(imgs)
 
-    for i, img in enumerate(result):
+    for j, img in enumerate(result):
         filepath = os.path.join(args.save_dir, f"{args.task}_{count}.png")
         torchvision.utils.save_image((img/2 + 0.5), filepath)
         count+=1
