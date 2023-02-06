@@ -178,7 +178,7 @@ for i in range(args.num_batches):
 
     for i, img in enumerate(result):
         filepath = os.path.join(args.save_dir, f"{args.task}_{count}.png")
-        torchvision.utils.save_image((img/2 + 0.5)*255, filepath)
+        torchvision.utils.save_image((img/2 + 0.5), filepath)
         count+=1
 
 
