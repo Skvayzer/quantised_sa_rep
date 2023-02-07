@@ -2,6 +2,7 @@ import os
 import random
 import sys
 
+from torchvision.transforms import transforms
 
 sys.path.append("..")
 
@@ -115,8 +116,8 @@ collation = None
 
 
 
-real_data = ImageFolder(root=args.path_real)
-gen_data = ImageFolder(root=args.path_gen)
+real_data = ImageFolder(root=args.path_real, transform=transforms.ToTensor())
+gen_data = ImageFolder(root=args.path_gen, transform=transforms.ToTensor())
 
 # fid = FrechetInceptionDistance(feature=64)
 print("\n\nATTENTION! data: ", real_data[0], '\n\n', file=sys.stderr, flush=True)
