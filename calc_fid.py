@@ -117,8 +117,8 @@ collation = None
 
 
 
-real_data = ImageFolder(root=args.path_real)
-# gen_data = ImageFolder(root=args.path_gen)
+# real_data = ImageFolder(root=args.path_real)
+gen_data = ImageFolder(root=args.path_gen)
 
 
 # ------------------------------------------------------------
