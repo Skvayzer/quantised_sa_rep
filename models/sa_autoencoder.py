@@ -29,7 +29,6 @@ class SlotAttentionAE(pl.LightningModule):
                  dataset='',
                  task='',
                  quantization=True,
-                 val_data=None,
                  nums=[8, 8, 8, 8],
                  beta=2,
                  lr=4e-4,
@@ -45,8 +44,6 @@ class SlotAttentionAE(pl.LightningModule):
         self.dataset = dataset
         self.task = task
         self.quantization = quantization
-
-        self.val_data = val_data
 
         # Encoder
         self.encoder = nn.Sequential(
