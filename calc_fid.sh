@@ -29,7 +29,7 @@ singularity exec instance://ml_env9 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/calc_fid.py --dataset 'clevr' --task 'fid calc' --device 'gpu' --train_path "/home/quantised_sa/datasets/clevr" --seed 29 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/calc_fid.py --dataset 'clevr' --task 'fid calc' --device 'gpu' --path_gen "/home/quantised_sa/generated_images/clevr/vq-sa" --seed 29 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
