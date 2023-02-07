@@ -16,10 +16,8 @@ from argparse import ArgumentParser
 import argparse
 from datasets import CLEVR, CLEVRTEX, CLEVR_Mirror
 from torchvision.datasets import ImageFolder
-from models import SlotAttentionAE
-import wandb
+from torchmetrics.image.fid import FrechetInceptionDistance
 
-from utils import adjusted_rand_index
 
 
 # ------------------------------------------------------------
@@ -117,14 +115,20 @@ collation = None
 
 
 
-# real_data = ImageFolder(root=args.path_real)
+real_data = ImageFolder(root=args.path_real)
 gen_data = ImageFolder(root=args.path_gen)
+
+fid = FrechetInceptionDistance(feature=64)
+
+for i in range(len(real_data)):
+    fid.update(real_data[i][0], real=True)
+    fid.update(gen_data[i][0], real=False)
 
 
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
-print("\n\nATTENTION! data: ", len(gen_data), '\n\n', file=sys.stderr, flush=True)
+print("\n\nATTENTION! fid: ", fid.compute(), '\n\n', file=sys.stderr, flush=True)
 
 
 
