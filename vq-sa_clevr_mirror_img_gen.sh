@@ -29,7 +29,7 @@ singularity exec instance://ml_env9 /bin/bash -c "
       nvidia-smi;
       free -m;
       cd /home/quantised_sa;
-      python3 -u quantised_sa_rep/image_gen.py --dataset 'clevr-mirror' --task 'clevr-mirror vq-sa beta=1' --save_dir '/home/quantised_sa/generated_images/clevr-mirror/vq-sa/data' --from_checkpoint '/home/quantised_sa/sa_autoencoder_end_to_end/clevr-mirror/VQ-SA (SA based) clevr mirror 16:50 06.02.2023 (ckpt)/110_1.0_VQ-SA (SA based) clevr mirror 16:50 06.02.2023 (ckpt)_clevr-mirror_od_pretrained.ckpt' --device 'gpu' --max_epochs 2000 --batch_size 32 --num_batches 10 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 29 --nums 8 3 2 2 --num_workers 4;
+      python3 -u quantised_sa_rep/image_gen.py --dataset 'clevr-mirror' --no-quantization --task 'clevr-mirror sa' --save_dir '/home/quantised_sa/generated_images/clevr-mirror/sa/data' --from_checkpoint '/home/quantised_sa/sa_autoencoder_end_to_end/clevr-mirror/slot attention clevr-mirror/20_0.0_slot attention clevr-mirror_clevr-mirror_od_pretrained.ckpt' --device 'gpu' --max_epochs 2000 --batch_size 32 --num_batches 10 --train_path "/home/quantised_sa/datasets/clevr-mirror" --seed 29 --nums 8 3 2 2 --num_workers 4;
       free -m;
 ";
 
