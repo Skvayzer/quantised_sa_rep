@@ -17,7 +17,7 @@ from argparse import ArgumentParser
 import argparse
 from datasets import CLEVR, CLEVRTEX, CLEVR_Mirror
 from torchvision.datasets import ImageFolder
-# from torchmetrics.image.fid import FrechetInceptionDistance
+from torchmetrics.image.fid import FrechetInceptionDistance
 
 
 
@@ -119,20 +119,19 @@ collation = None
 real_data = ImageFolder(root=args.path_real, transform=transforms.ToTensor())
 gen_data = ImageFolder(root=args.path_gen, transform=transforms.ToTensor())
 
-# fid = FrechetInceptionDistance(feature=64)
-print("\n\nATTENTION! data: ", real_data[0], '\n\n', file=sys.stderr, flush=True)
+fid = FrechetInceptionDistance(feature=64, normalize=True)
+print("\n\nATTENTION! data: ", real_data[0][0], real_data[0][0].shape, '\n\n', file=sys.stderr, flush=True)
 
-# for i in range(len(real_data)):
+for i in range(len(real_data)):
     # print("\n\nATTENTION! data: ", real_data[i], '\n\n', file=sys.stderr, flush=True)
-
-    # fid.update(real_data[i][0], real=True)
-    # fid.update(gen_data[i][0], real=False)
+    fid.update(real_data[i][0], real=True)
+    fid.update(gen_data[i][0], real=False)
 
 
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
-# print("\n\nATTENTION! fid: ", fid.compute(), '\n\n', file=sys.stderr, flush=True)
+print("\n\nATTENTION! fid: ", fid.compute(), '\n\n', file=sys.stderr, flush=True)
 
 
 
