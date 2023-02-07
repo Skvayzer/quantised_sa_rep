@@ -181,7 +181,7 @@ for i in range(args.num_batches):
 
     result, recons, _, pred_masks = autoencoder(imgs)
 
-    for j, img in enumerate(imgs):
+    for j, img in enumerate(result):
         filepath = os.path.join(args.save_dir, f"{args.task}_{count}.png")
         torchvision.utils.save_image((img/2 + 0.5), filepath)
         count+=1
