@@ -120,12 +120,12 @@ real_data = ImageFolder(root=args.path_real, transform=transforms.ToTensor())
 gen_data = ImageFolder(root=args.path_gen, transform=transforms.ToTensor())
 
 fid = FrechetInceptionDistance(feature=64, normalize=True)
-print("\n\nATTENTION! data: ", real_data[0][0], real_data[0][0].shape, '\n\n', file=sys.stderr, flush=True)
+print("\n\nATTENTION! data: ", real_data[0][0].unsqueeze(dim=0), real_data[0][0].unsqueeze(dim=0).shape, '\n\n', file=sys.stderr, flush=True)
 
 for i in range(len(real_data)):
     # print("\n\nATTENTION! data: ", real_data[i], '\n\n', file=sys.stderr, flush=True)
-    fid.update(real_data[i][0], real=True)
-    fid.update(gen_data[i][0], real=False)
+    fid.update(real_data[i][0].unsqueeze(dim=0), real=True)
+    fid.update(gen_data[i][0].unsqueeze(dim=0), real=False)
 
 
 # ------------------------------------------------------------
