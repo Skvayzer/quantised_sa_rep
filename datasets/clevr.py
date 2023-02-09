@@ -35,7 +35,8 @@ class CLEVR(Dataset):
             self.scenes = json.load(f)['scenes']
         self.scenes = [x for x in self.scenes if len(x['objects']) <= max_objs]
         
-        transform = [transforms.CenterCrop((256, 256))] #if not get_target else []
+        # transform = [transforms.CenterCrop((256, 256))] #if not get_target else []
+        transform = []
         self.transform = transforms.Compose(
             transform + [
                 transforms.Resize((128, 128)),
@@ -49,6 +50,7 @@ class CLEVR(Dataset):
     def __getitem__(self, idx):
         scene = self.scenes[idx]
         img = Image.open(os.path.join(self.images_path, scene['image_filename'])).convert('RGB')
+        img = transforms.functional.crop(img, top=64, left=29, height=192, width=192)
         img = self.transform(img)
         target = []
         if self.get_target:
