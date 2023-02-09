@@ -50,6 +50,7 @@ class CLEVR(Dataset):
     def __getitem__(self, idx):
         scene = self.scenes[idx]
         img = Image.open(os.path.join(self.images_path, scene['image_filename'])).convert('RGB')
+        img = transforms.functional.resize(img, (320, 240))
         img = transforms.functional.crop(img, top=64, left=29, height=192, width=192)
         img = self.transform(img)
         target = []
