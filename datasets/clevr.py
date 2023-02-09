@@ -35,7 +35,7 @@ class CLEVR(Dataset):
             self.scenes = json.load(f)['scenes']
         self.scenes = [x for x in self.scenes if len(x['objects']) <= max_objs]
         
-        transform = [transforms.CenterCrop((192, 192))] #if not get_target else []
+        transform = [transforms.CenterCrop((256, 256))] #if not get_target else []
         self.transform = transforms.Compose(
             transform + [
                 transforms.Resize((128, 128)),
