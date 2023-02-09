@@ -31,7 +31,7 @@ class SlotAttentionAE(pl.LightningModule):
                  quantization=True,
                  nums=[8, 8, 8, 8],
                  beta=1,
-                 lr=0.999,
+                 lr=4e-4,
                  num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
