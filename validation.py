@@ -192,6 +192,11 @@ if len(args.from_checkpoint) > 0:
 num_slots = 7
 batch = next(iter(val_loader))
 imgs = batch['image'].to(device)
+
+wandb_logger.experiment.log({
+                'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
+            })
+
 if args.dataset in ['clevr-tex', 'clevr'] and args.val_path is not None:
     masks = batch['mask'].to(device)
     true_masks = masks[:, 1:num_slots, :, :]
@@ -203,7 +208,6 @@ if args.alter:
 
 
 wandb_logger.experiment.log({
-                'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
                 'reconstructions': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(result, -1, 1)]
             })
 wandb_logger.experiment.log({
