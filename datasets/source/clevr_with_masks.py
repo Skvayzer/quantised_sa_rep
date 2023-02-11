@@ -108,7 +108,7 @@ for name, l in data_dict.items():
   save_path = os.path.join(current_dir, dataset_name, dataset_name + '_' + name)
   if not (os.path.exists(save_path)):
       # create the directory you want to save to
-      os.mkdir(save_path)
+      os.makedirs(save_path)
 
       # write the file in the new directory
       np.savez(save_path, images=images, masks=masks)
