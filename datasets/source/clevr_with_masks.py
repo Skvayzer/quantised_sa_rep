@@ -104,8 +104,14 @@ for name, l in data_dict.items():
     masks[i] = d['mask'].numpy().transpose(0, 3, 1, 2)
     visibility[i] = d['visibility'].numpy()
 
+  # check the directory does not exist
+  save_path = os.path.join(current_dir, dataset_name, dataset_name + '_' + name)
+  if not (os.path.exists(save_path)):
+      # create the directory you want to save to
+      os.mkdir(save_path)
 
-  np.savez(os.path.join(current_dir,  dataset_name, dataset_name + '_' + name), images=images, masks=masks)
+      # write the file in the new directory
+      np.savez(save_path, images=images, masks=masks)
   item = next(iter(ds))
 
 print("Done")
