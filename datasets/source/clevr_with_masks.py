@@ -81,8 +81,8 @@ data_dict = {'train': 70_000,
              'test': 14_998}
 
 dataset_name = 'clevr'
-current_dir = os.path.dirname(os.path.realpath(__file__))
-dataset_path = 'datasets/sa_clevr/clevr_with_masks_train.tfrecords'
+current_dir = '/mnt/data/users_data/smirnov/quantised_sa/datasets/sa_clevr'
+dataset_path = '/mnt/data/users_data/smirnov/quantised_sa/datasets/clevr_with_masks_train.tfrecords'
 ds = iter(dataset(dataset_path))
 
 
