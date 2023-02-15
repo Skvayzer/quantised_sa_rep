@@ -91,18 +91,21 @@ train_dataset, val_dataset = None, None
 collation = None
 
 if dataset == 'clevr':
-    train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
-                          scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
-                          max_objs=6)
+    # train_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'train'),
+    #                       scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_train_scenes.json'),
+    #                       max_objs=6)
 
+
+    train_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_train.npz'), resize=(128, 128))
+    val_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
 
     #max 6 objects
-    if args.val_path != None:
-        val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
-    else:
-        val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
-                            scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
-                            max_objs=6)
+    # if args.val_path != None:
+    #     val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
+    # else:
+    #     val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
+    #                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
+    #                         max_objs=6)
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'scenes'),

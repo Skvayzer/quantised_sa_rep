@@ -16,12 +16,12 @@ class CLEVRwithMasks(Dataset):
         self.image_size = self.images[0].shape
         self.image_transform = torchvision.transforms.Compose([
             torchvision.transforms.ToPILImage(),
-            torchvision.transforms.CenterCrop((256, 256)),
+            torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize),
             torchvision.transforms.ToTensor()
         ])
         self.mask_transform = torchvision.transforms.Compose([
-            torchvision.transforms.CenterCrop((256, 256)),
+            torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize)
         ])
     def __len__(self):

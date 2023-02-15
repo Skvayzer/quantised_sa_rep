@@ -110,8 +110,8 @@ for name, l in data_dict.items():
       # create the directory you want to save to
       os.makedirs(save_path)
 
-      # write the file in the new directory
-      np.savez(save_path, images=images, masks=masks)
+  # write the file in the new directory
+  np.savez(save_path, images=images, masks=masks)
   item = next(iter(ds))
 
 print("Done")
