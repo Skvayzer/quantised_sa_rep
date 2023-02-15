@@ -80,7 +80,7 @@ data_dict = {'train': 70_000,
              'val': 15_000,
              'test': 14_998}
 
-dataset_name = 'clevr'
+dataset_name = 'clevr_with_masks'
 current_dir = '/mnt/data/users_data/smirnov/quantised_sa/datasets/sa_clevr'
 dataset_path = '/mnt/data/users_data/smirnov/quantised_sa/datasets/clevr_with_masks_train.tfrecords'
 ds = iter(dataset(dataset_path))
