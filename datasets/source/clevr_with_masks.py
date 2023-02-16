@@ -111,7 +111,10 @@ for name, l in data_dict.items():
       os.makedirs(save_path)
 
   # write the file in the new directory
-  np.savez(save_path, images=images, masks=masks, visibility=visibility)
+  if name == 'train':
+      np.savez(save_path, images=images, visibility=visibility)
+  else:
+    np.savez(save_path, images=images, masks=masks, visibility=visibility)
   item = next(iter(ds))
 
 print("Done")
