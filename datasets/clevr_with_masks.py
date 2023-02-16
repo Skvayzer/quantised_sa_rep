@@ -42,5 +42,5 @@ class CLEVRwithMasks(Dataset):
 
         return {
             'image': image * 2 - 1,
-            'mask': mask if self.get_masks else None
+            'mask': mask if self.get_masks else []
         }
