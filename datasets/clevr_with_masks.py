@@ -21,12 +21,12 @@ class CLEVRwithMasks(Dataset):
         for i, v in enumerate(torch.tensor(data['visibility'])):
             if sum(v) > max_objs+1:
                 continue
-            print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
+            # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
 
             self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
 
             if get_masks:
-                print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
+                # print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
 
                 self.masks = torch.vstack((self.masks, raw_masks[i].unsqueeze(dim=0)))
 
@@ -45,6 +45,8 @@ class CLEVRwithMasks(Dataset):
             torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize)
         ])
+        print("\n\nDONE SELECTION", file=sys.stderr, flush=True)
+
     def __len__(self):
         return len(self.images)
 
