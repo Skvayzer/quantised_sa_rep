@@ -9,6 +9,8 @@ from torch.utils.data import Dataset
 class CLEVRwithMasks(Dataset):
     def __init__(self, path_to_dataset, resize, max_objs=6, get_masks=False):
         data = np.load(path_to_dataset)
+        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
+
         raw_images = torch.tensor(data['images'])
 
         if get_masks:
@@ -17,7 +19,7 @@ class CLEVRwithMasks(Dataset):
             self.masks = torch.empty(0, 11, 1, 240, 320)
 
         self.images = torch.empty(0, 3, 240, 320)
-        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
+        # print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
         for i, v in enumerate(torch.tensor(data['visibility'])):
             print("\n\n", i, file=sys.stderr, flush=True)
