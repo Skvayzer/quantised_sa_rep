@@ -19,6 +19,10 @@ class CLEVRwithMasks(Dataset):
         self.images = torch.empty(0, 3, 240, 320)
 
         for i, v in enumerate(torch.tensor(data['visibility'])):
+            print("\n\n", i, file=sys.stderr, flush=True)
+
+            if i > 1000:
+                break
             if sum(v) > max_objs+1:
                 continue
             # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
