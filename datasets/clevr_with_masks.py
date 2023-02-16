@@ -17,6 +17,7 @@ class CLEVRwithMasks(Dataset):
             self.masks = torch.empty(0, 11, 1, 240, 320)
 
         self.images = torch.empty(0, 3, 240, 320)
+        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
         for i, v in enumerate(torch.tensor(data['visibility'])):
             print("\n\n", i, file=sys.stderr, flush=True)
