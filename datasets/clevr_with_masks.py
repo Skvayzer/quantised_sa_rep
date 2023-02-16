@@ -21,7 +21,7 @@ class CLEVRwithMasks(Dataset):
         for i, v in enumerate(torch.tensor(data['visibility'])):
             if sum(v) > max_objs+1:
                 continue
-            print("\n\nATTENTION! raw imgs : ", raw_images.shape, file=sys.stderr, flush=True)
+            print("\n\nATTENTION! raw imgs : ", raw_images[i].shape, file=sys.stderr, flush=True)
 
             self.images = torch.vstack((self.images, raw_images[i]))
 
