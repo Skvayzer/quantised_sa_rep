@@ -97,7 +97,7 @@ if dataset == 'clevr':
 
 
     train_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_train.npz'), resize=(128, 128))
-    val_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
+    val_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_val.npz'), resize=(128, 128), get_masks=True)
 
     #max 6 objects
     # if args.val_path != None:

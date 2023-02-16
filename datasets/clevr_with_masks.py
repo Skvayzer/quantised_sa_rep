@@ -7,11 +7,13 @@ import torchvision
 from torch.utils.data import Dataset
 
 class CLEVRwithMasks(Dataset):
-    def __init__(self, path_to_dataset, resize):
+    def __init__(self, path_to_dataset, resize, get_masks=False):
         data = np.load(path_to_dataset)
-        self.masks = torch.squeeze(torch.tensor(data['masks']))
+        if get_masks:
+            self.masks = torch.squeeze(torch.tensor(data['masks']))
         self.images = torch.tensor(data['images'])
         self.resize = resize
+        self.get_masks = get_masks
         # self.visibility = data['visibility']
         self.image_size = self.images[0].shape
         self.image_transform = torchvision.transforms.Compose([
@@ -31,13 +33,14 @@ class CLEVRwithMasks(Dataset):
         # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         image = self.image_transform(self.images[idx])
-        mask = self.mask_transform(self.masks[idx])
+        if self.get_masks:
+            mask = self.mask_transform(self.masks[idx])
+            mask = mask.float() / 255
 
         # print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
         # print("\n\nATTENTION! clevr with masks mask max/min: ", torch.max(mask), torch.min(mask), file=sys.stderr, flush=True)
 
-        mask = mask.float() / 255
         return {
             'image': image * 2 - 1,
-            'mask': mask
+            'mask': mask if self.get_masks else None
         }
