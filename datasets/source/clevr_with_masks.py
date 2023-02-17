@@ -80,7 +80,7 @@ data_dict = {'train': 70_000,
              'val': 15_000,
              'test': 14_998}
 
-dataset_name = 'clevr_with_masks'
+dataset_name = 'clevr_with_masks_6'
 current_dir = '/mnt/data/users_data/smirnov/quantised_sa/datasets/sa_clevr'
 dataset_path = '/mnt/data/users_data/smirnov/quantised_sa/datasets/clevr_with_masks_train.tfrecords'
 ds = iter(dataset(dataset_path))
@@ -88,9 +88,9 @@ ds = iter(dataset(dataset_path))
 
 for name, l in data_dict.items():
   print(f"{name} started")
-  images = np.zeros((l, 3, 240, 320), dtype=np.uint8)
-  masks = np.zeros((l, 11, 1, 240, 320), dtype=np.uint8)
-  visibility = np.zeros((l, 11), dtype=float)
+  images = np.empty((0, 3, 240, 320), dtype=np.uint8)
+  masks = np.empty((0, 11, 1, 240, 320), dtype=np.uint8)
+  visibility = np.empty((0, 11), dtype=float)
   for i in range(l):
     if (i + 1) % 1_000 == 0:
       print(i + 1)
@@ -100,9 +100,11 @@ for name, l in data_dict.items():
       print(i)
       break
 
-    images[i] = d['image'].numpy().transpose(2, 0, 1)
-    masks[i] = d['mask'].numpy().transpose(0, 3, 1, 2)
-    visibility[i] = d['visibility'].numpy()
+    if sum(d['visibility'].numpy()) > 7:
+        continue
+    images = np.vstack((images, d['image'].numpy().transpose(2, 0, 1).expand_dims(dim=0)))
+    masks = np.vstack((masks, d['mask'].numpy().transpose(0, 3, 1, 2).expand_dims(dim=0)))
+    visibility = np.vstack((visibility, d['visibility'].numpy()))
 
   # check the directory does not exist
   save_path = os.path.join(current_dir, dataset_name, dataset_name + '_' + name)

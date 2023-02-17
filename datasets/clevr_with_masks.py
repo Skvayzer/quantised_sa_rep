@@ -14,32 +14,36 @@ class CLEVRwithMasks(Dataset):
         # raw_images = data['images']
         print("\n\n processed images", file=sys.stderr, flush=True)
 
+        # if get_masks:
+        #     # self.masks = torch.squeeze(torch.tensor(data['masks']))
+        #     # raw_masks = data['masks']
+        #     self.masks = np.empty((0, 11, 1, 240, 320))
+        #
+        # self.images = np.empty((0, 3, 240, 320))
+        # print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
+        #
+        # for i, v in enumerate(data['visibility']):
+        #     print("\n\n", i, file=sys.stderr, flush=True)
+        #     print("\n\n", v, file=sys.stderr, flush=True)
+        #
+        #     if i > 1000:
+        #         break
+        #     if sum(v) > max_objs+1:
+        #         continue
+        #     # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
+        #
+        #     # self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
+        #     self.images = np.vstack((self.images, data['images'][i].expand_dims(dim=0)))
+        #
+        #     if get_masks:
+        #         # print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
+        #
+        #         self.masks = np.vstack((self.masks, data['masks'][i].expand_dims(dim=0)))
+
+
+        self.images = data['images']
         if get_masks:
-            # self.masks = torch.squeeze(torch.tensor(data['masks']))
-            # raw_masks = data['masks']
-            self.masks = np.empty((0, 11, 1, 240, 320))
-
-        self.images = np.empty((0, 3, 240, 320))
-        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
-
-        for i, v in enumerate(data['visibility']):
-            print("\n\n", i, file=sys.stderr, flush=True)
-            print("\n\n", v, file=sys.stderr, flush=True)
-
-            if i > 1000:
-                break
-            if sum(v) > max_objs+1:
-                continue
-            # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
-
-            # self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
-            self.images = np.vstack((self.images, data['images'][i].expand_dims(dim=0)))
-
-            if get_masks:
-                # print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
-
-                self.masks = np.vstack((self.masks, data['masks'][i].expand_dims(dim=0)))
-
+            self.masks = data['masks']
         self.visibility = data['visibility']
         self.resize = resize
         self.get_masks = get_masks
