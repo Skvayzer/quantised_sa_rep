@@ -11,12 +11,12 @@ class CLEVRwithMasks(Dataset):
         data = np.load(path_to_dataset)
         # print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
-        raw_images = data['images']
+        # raw_images = data['images']
         print("\n\n processed images", file=sys.stderr, flush=True)
 
         if get_masks:
             # self.masks = torch.squeeze(torch.tensor(data['masks']))
-            raw_masks = data['masks']
+            # raw_masks = data['masks']
             self.masks = np.empty((0, 11, 1, 240, 320))
 
         self.images = np.empty((0, 3, 240, 320))
@@ -32,12 +32,12 @@ class CLEVRwithMasks(Dataset):
             # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
 
             # self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
-            self.images = np.vstack((self.images, raw_images[i].expand_dims(dim=0)))
+            self.images = np.vstack((self.images, data['images'][i].expand_dims(dim=0)))
 
             if get_masks:
                 # print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
 
-                self.masks = np.vstack((self.masks, raw_masks[i].expand_dims(dim=0)))
+                self.masks = np.vstack((self.masks, data['masks'][i].expand_dims(dim=0)))
 
         self.visibility = data['visibility']
         self.resize = resize
