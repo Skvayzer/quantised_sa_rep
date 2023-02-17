@@ -65,8 +65,8 @@ class CLEVRwithMasks(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx):
-        # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
-        # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
+        print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         image = torchvision.transforms.ToPILImage()(self.images[idx])
         image = torchvision.transforms.functional.crop(image, top=64, left=29, height=192, width=192)
 
