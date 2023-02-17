@@ -50,13 +50,13 @@ class CLEVRwithMasks(Dataset):
         # self.visibility = data['visibility']
         self.image_size = self.images[0].shape
         self.image_transform = torchvision.transforms.Compose([
-            torchvision.transforms.ToPILImage(),
-            torchvision.transforms.CenterCrop((192, 192)),
+            # torchvision.transforms.ToPILImage(),
+            # torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize),
             torchvision.transforms.ToTensor()
         ])
         self.mask_transform = torchvision.transforms.Compose([
-            torchvision.transforms.CenterCrop((192, 192)),
+            # torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize)
         ])
         print("\n\nDONE SELECTION", file=sys.stderr, flush=True)
@@ -67,10 +67,14 @@ class CLEVRwithMasks(Dataset):
     def __getitem__(self, idx):
         # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
-        image = self.image_transform(self.images[idx])
+        image = torchvision.transforms.ToPILImage()(self.images[idx])
+        image = torchvision.transforms.functional.crop(image, top=64, left=29, height=192, width=192)
+
+        image = self.image_transform(image)
         visibility = self.visibility[idx]
         if self.get_masks:
-            mask = self.mask_transform(self.masks[idx])
+            mask = torchvision.transforms.functional.crop(self.masks[idx], top=64, left=29, height=192, width=192)
+            mask = self.mask_transform(mask)
             mask = mask.float() / 255
 
         # print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
