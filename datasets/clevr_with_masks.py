@@ -9,20 +9,20 @@ from torch.utils.data import Dataset
 class CLEVRwithMasks(Dataset):
     def __init__(self, path_to_dataset, resize, max_objs=6, get_masks=False):
         data = np.load(path_to_dataset)
-        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
+        # print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
-        raw_images = torch.tensor(data['images'])
+        raw_images = data['images']
         print("\n\n processed images", file=sys.stderr, flush=True)
 
         if get_masks:
             # self.masks = torch.squeeze(torch.tensor(data['masks']))
-            raw_masks = torch.tensor(data['masks'])
-            self.masks = torch.empty(0, 11, 1, 240, 320)
+            raw_masks = data['masks']
+            self.masks = np.empty((0, 11, 1, 240, 320))
 
-        self.images = torch.empty(0, 3, 240, 320)
-        # print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
+        self.images = np.empty((0, 3, 240, 320))
+        print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
-        for i, v in enumerate(torch.tensor(data['visibility'])):
+        for i, v in enumerate(data['visibility']):
             print("\n\n", i, file=sys.stderr, flush=True)
 
             if i > 1000:
@@ -31,14 +31,15 @@ class CLEVRwithMasks(Dataset):
                 continue
             # print("\n\nATTENTION! raw imgs : ", raw_images[i].unsqueeze(dim=0).shape, file=sys.stderr, flush=True)
 
-            self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
+            # self.images = torch.vstack((self.images, raw_images[i].unsqueeze(dim=0)))
+            self.images = np.vstack((self.images, raw_images[i].expand_dims(dim=0)))
 
             if get_masks:
                 # print("\n\nATTENTION! raw masks : ", raw_masks.shape, file=sys.stderr, flush=True)
 
-                self.masks = torch.vstack((self.masks, raw_masks[i].unsqueeze(dim=0)))
+                self.masks = np.vstack((self.masks, raw_masks[i].expand_dims(dim=0)))
 
-        self.visibility = torch.tensor(data['visibility'])
+        self.visibility = data['visibility']
         self.resize = resize
         self.get_masks = get_masks
         # self.visibility = data['visibility']
