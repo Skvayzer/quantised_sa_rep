@@ -86,14 +86,38 @@ dataset_path = '/mnt/data/users_data/smirnov/quantised_sa/datasets/clevr_with_ma
 ds = iter(dataset(dataset_path))
 
 
+# for name, l in data_dict.items():
+#   print(f"{name} started")
+#   images = np.empty((0, 3, 240, 320), dtype=np.uint8)
+#   masks = np.empty((0, 11, 1, 240, 320), dtype=np.uint8)
+#   visibility = np.empty((0, 11), dtype=float)
+#   for i in range(l):
+#     if (i + 1) % 1_000 == 0:
+#       print(i + 1)
+#     try:
+#       d = dict(next(ds))
+#     except StopIteration:
+#       print(i)
+#       break
+#
+#     if sum(d['visibility'].numpy()) > 7:
+#         continue
+#     images = np.vstack((images, np.expand_dims(d['image'].numpy().transpose(2, 0, 1), axis=0)))
+#     masks = np.vstack((masks, np.expand_dims(d['mask'].numpy().transpose(0, 3, 1, 2), axis=0)))
+#     visibility = np.vstack((visibility, np.expand_dims(d['visibility'].numpy(), axis=0)))
+
+
 for name, l in data_dict.items():
   print(f"{name} started")
-  images = np.empty((0, 3, 240, 320), dtype=np.uint8)
-  masks = np.empty((0, 11, 1, 240, 320), dtype=np.uint8)
-  visibility = np.empty((0, 11), dtype=float)
+  images = np.zeros((l, 3, 240, 320), dtype=np.uint8)
+  masks = np.zeros((l, 11, 1, 240, 320), dtype=np.uint8)
+  visibility = np.zeros((l, 11), dtype=float)
+
+  count = 0
   for i in range(l):
     if (i + 1) % 1_000 == 0:
       print(i + 1)
+      print(count)
     try:
       d = dict(next(ds))
     except StopIteration:
@@ -102,9 +126,10 @@ for name, l in data_dict.items():
 
     if sum(d['visibility'].numpy()) > 7:
         continue
-    images = np.vstack((images, np.expand_dims(d['image'].numpy().transpose(2, 0, 1), axis=0)))
-    masks = np.vstack((masks, np.expand_dims(d['mask'].numpy().transpose(0, 3, 1, 2), axis=0)))
-    visibility = np.vstack((visibility, np.expand_dims(d['visibility'].numpy(), axis=0)))
+    images[count] = d['image'].numpy().transpose(2, 0, 1)
+    masks[count] = d['mask'].numpy().transpose(0, 3, 1, 2)
+    visibility[count] = d['visibility'].numpy()
+    count+=1
 
   # check the directory does not exist
   save_path = os.path.join(current_dir, dataset_name, dataset_name + '_' + name)
@@ -114,9 +139,9 @@ for name, l in data_dict.items():
 
   # write the file in the new directory
   if name == 'train':
-      np.savez(save_path, images=images, visibility=visibility)
+      np.savez(save_path, images=images[:count], visibility=visibility[:count])
   else:
-    np.savez(save_path, images=images, masks=masks, visibility=visibility)
+    np.savez(save_path, images=images[:count], masks=masks[:count], visibility=visibility[:count])
   item = next(iter(ds))
 
 print("Done")
