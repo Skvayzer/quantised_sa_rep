@@ -12,6 +12,7 @@ class CLEVRwithMasks(Dataset):
         print("\n\n STARTED SELECTION", file=sys.stderr, flush=True)
 
         raw_images = torch.tensor(data['images'])
+        print("\n\n processed images", file=sys.stderr, flush=True)
 
         if get_masks:
             # self.masks = torch.squeeze(torch.tensor(data['masks']))
