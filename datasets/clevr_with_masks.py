@@ -24,6 +24,7 @@ class CLEVRwithMasks(Dataset):
 
         for i, v in enumerate(data['visibility']):
             print("\n\n", i, file=sys.stderr, flush=True)
+            print("\n\n", v, file=sys.stderr, flush=True)
 
             if i > 1000:
                 break
