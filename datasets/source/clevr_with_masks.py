@@ -102,9 +102,9 @@ for name, l in data_dict.items():
 
     if sum(d['visibility'].numpy()) > 7:
         continue
-    images = np.vstack((images, np.expand_dims(d['image'].numpy().transpose(2, 0, 1), dim=0)))
-    masks = np.vstack((masks, np.expand_dims(d['mask'].numpy().transpose(0, 3, 1, 2), dim=0)))
-    visibility = np.vstack((visibility, np.expand_dims(d['visibility'].numpy(), dim=0)))
+    images = np.vstack((images, np.expand_dims(d['image'].numpy().transpose(2, 0, 1), axis=0)))
+    masks = np.vstack((masks, np.expand_dims(d['mask'].numpy().transpose(0, 3, 1, 2), axis=0)))
+    visibility = np.vstack((visibility, np.expand_dims(d['visibility'].numpy(), axis=0)))
 
   # check the directory does not exist
   save_path = os.path.join(current_dir, dataset_name, dataset_name + '_' + name)
