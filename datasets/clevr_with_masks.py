@@ -57,6 +57,7 @@ class CLEVRwithMasks(Dataset):
         ])
         self.mask_transform = torchvision.transforms.Compose([
             # torchvision.transforms.CenterCrop((192, 192)),
+            torchvision.transforms.ToTensor(),
             torchvision.transforms.Resize(resize)
         ])
         print("\n\nDONE SELECTION", self.images.shape, file=sys.stderr, flush=True)
@@ -69,7 +70,7 @@ class CLEVRwithMasks(Dataset):
         print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         print(idx, file=sys.stderr, flush=True)
         image = self.images[idx][:, 29:221, 64:256]
-        # image = torchvision.transforms.functional.to_pil_image(self.images[idx].transpose(1, 2, 0))
+        image = torchvision.transforms.functional.to_pil_image(self.images[idx].transpose(1, 2, 0))
         # image = torchvision.transforms.functional.crop(image, top=64, left=29, height=192, width=192)
 
         # image = self.image_transform(self.images[idx])
