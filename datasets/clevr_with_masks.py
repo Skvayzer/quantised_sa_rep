@@ -59,7 +59,7 @@ class CLEVRwithMasks(Dataset):
             # torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize)
         ])
-        print("\n\nDONE SELECTION", file=sys.stderr, flush=True)
+        print("\n\nDONE SELECTION", self.images.shape, file=sys.stderr, flush=True)
 
     def __len__(self):
         return len(self.images)
