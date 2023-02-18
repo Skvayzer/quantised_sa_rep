@@ -224,12 +224,17 @@ trainer = pl.Trainer(accelerator=accelerator,
                      profiler=profiler,
                      callbacks=callbacks,
                      logger=wandb_logger,
+                     num_sanity_val_steps=0
                      )
 #  precision=16,
 # deterministic=False)
 
 if not len(args.from_checkpoint):
     args.from_checkpoint = None
+# else:
+#     ckpt = torch.load(args.from_checkpoint)
+#
+#     autoencoder.load_state_dict(state_dict=ckpt, strict=False)
 
 # Train
 trainer.fit(autoencoder, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=args.from_checkpoint)
