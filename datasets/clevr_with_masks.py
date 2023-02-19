@@ -81,8 +81,9 @@ class CLEVRwithMasks(Dataset):
             # mask = torchvision.transforms.functional.crop(mask, top=64, left=29, height=192, width=192)
             # mask = self.mask_transform(self.masks[idx])
             mask = torch.tensor(self.masks[idx][:, :, 29:221, 64:256])
-            for i in range(mask.shape[0]):
-                mask[i] = self.mask_transform(mask[i])
+            transformed_mask = torch.zeros((11, 1) + self.resize)
+            for i in range(11):
+                transformed_mask[i] = self.mask_transform(mask[i])
             mask = mask.float() / 255
 
         # print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
