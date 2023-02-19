@@ -32,7 +32,7 @@ class SlotAttentionAE(pl.LightningModule):
                  nums=[8, 8, 8, 8],
                  beta=1,
                  lr=4e-4,
-                 num_steps=int(3e5), **kwargs
+                 num_steps=int(2*3e5), **kwargs
                  ):
         super().__init__()
         self.resolution = resolution

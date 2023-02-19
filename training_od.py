@@ -210,7 +210,7 @@ if args.pretrained:
 # Trainer
 # ------------------------------------------------------------
 # trainer parameters
-profiler = None  # 'simple'/'advanced'/None
+profiler = None  #   'simple'/'advanced'/None
 accelerator = args.device
 # devices = [int(args.devices)]
 gpus = [0]
@@ -224,7 +224,6 @@ trainer = pl.Trainer(accelerator=accelerator,
                      profiler=profiler,
                      callbacks=callbacks,
                      logger=wandb_logger,
-                     num_sanity_val_steps=0
                      )
 #  precision=16,
 # deterministic=False)
