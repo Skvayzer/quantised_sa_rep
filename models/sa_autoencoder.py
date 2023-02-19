@@ -170,7 +170,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
-                # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+                print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
                 self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
