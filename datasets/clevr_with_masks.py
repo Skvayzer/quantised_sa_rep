@@ -86,7 +86,7 @@ class CLEVRwithMasks(Dataset):
 
             for i in range(11):
                 transformed_mask[i] = self.mask_transform(mask[i])
-            transformed_mask = mask.float() / 255
+            transformed_mask = transformed_mask.float() / 255
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
             print("\n\nATTENTION! transformed_mask1: ", transformed_mask.shape, file=sys.stderr, flush=True)
 
