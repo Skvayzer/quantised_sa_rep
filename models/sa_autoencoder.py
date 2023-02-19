@@ -76,7 +76,6 @@ class SlotAttentionAE(pl.LightningModule):
         self.beta = beta
         self.save_hyperparameters()
 
-        self.trainer.optimizers, self.trainer.lr_schedulers = self.configure_optimizers()
 
     def forward(self, inputs, test=False):
         x = self.encoder(inputs)
