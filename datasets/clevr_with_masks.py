@@ -56,7 +56,7 @@ class CLEVRwithMasks(Dataset):
             torchvision.transforms.ToTensor()
         ])
         self.mask_transform = torchvision.transforms.Compose([
-            torchvision.transforms.CenterCrop((192, 192)),
+            # torchvision.transforms.CenterCrop((192, 192)),
             torchvision.transforms.Resize(resize)
         ])
         print("\n\nDONE SELECTION", self.images.shape, file=sys.stderr, flush=True)
