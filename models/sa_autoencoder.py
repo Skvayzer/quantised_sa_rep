@@ -147,7 +147,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8][:, 1:self.num_slots, :, :]
                 # print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
-                # print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
+                print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
 
 
             result, recons, _, pred_masks = self(imgs)

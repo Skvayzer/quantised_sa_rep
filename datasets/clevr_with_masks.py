@@ -67,7 +67,7 @@ class CLEVRwithMasks(Dataset):
     def __getitem__(self, idx):
         # print("\n\nATTENTION! item : ", self.images[idx].shape, file=sys.stderr, flush=True)
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
-        print(idx, file=sys.stderr, flush=True)
+        # print(idx, file=sys.stderr, flush=True)
         image = self.images[idx][:, 29:221, 64:256]
         image = torchvision.transforms.functional.to_pil_image(image.transpose(1, 2, 0))
         # image = torchvision.transforms.functional.crop(image, top=64, left=29, height=192, width=192)
@@ -85,6 +85,7 @@ class CLEVRwithMasks(Dataset):
             for i in range(11):
                 transformed_mask[i] = self.mask_transform(mask[i])
             mask = mask.float() / 255
+        # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
 
         # print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
         # print("\n\nATTENTION! clevr with masks mask max/min: ", torch.max(mask), torch.min(mask), file=sys.stderr, flush=True)
