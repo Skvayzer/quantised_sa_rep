@@ -70,7 +70,7 @@ class CLEVRwithMasks(Dataset):
         print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
         print(idx, file=sys.stderr, flush=True)
         image = self.images[idx][:, 29:221, 64:256]
-        image = torchvision.transforms.functional.to_pil_image(self.images[idx].transpose(1, 2, 0))
+        image = torchvision.transforms.functional.to_pil_image(image.transpose(1, 2, 0))
         # image = torchvision.transforms.functional.crop(image, top=64, left=29, height=192, width=192)
 
         # image = self.image_transform(self.images[idx])
