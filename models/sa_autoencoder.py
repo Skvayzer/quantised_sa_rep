@@ -182,5 +182,5 @@ class SlotAttentionAE(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
-        scheduler = lr_scheduler.OneCycleLR(optimizer, max_lr=self.lr, total_steps=self.num_steps, pct_start=0.05)
+        scheduler = lr_scheduler.OneCycleLR(optimizer, max_lr=self.lr, total_steps=int(3e6), pct_start=0.05)
         return [optimizer], [scheduler]
