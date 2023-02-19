@@ -151,6 +151,7 @@ class SlotAttentionAE(pl.LightningModule):
 
 
             result, recons, _, pred_masks = self(imgs)
+            print("\n\nATTENTION! imgs: ", imgs.shape, file=sys.stderr, flush=True)
             print("\n\nATTENTION! recons: ", recons.shape, file=sys.stderr, flush=True)
 
             pred_masks = torch.squeeze(pred_masks)
