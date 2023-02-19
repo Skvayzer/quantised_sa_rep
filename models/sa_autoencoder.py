@@ -147,12 +147,12 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 true_masks = batch['mask'][:8][:, 1:self.num_slots, :, :]
                 # print("\n\nATTENTION! true_masks: ", true_masks, file=sys.stderr, flush=True)
-                print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
+                # print("\n\nATTENTION! true_masks: ", true_masks.shape, file=sys.stderr, flush=True)
 
 
             result, recons, _, pred_masks = self(imgs)
-            print("\n\nATTENTION! imgs: ", imgs.shape, file=sys.stderr, flush=True)
-            print("\n\nATTENTION! recons: ", recons.shape, file=sys.stderr, flush=True)
+            # print("\n\nATTENTION! imgs: ", imgs.shape, file=sys.stderr, flush=True)
+            # print("\n\nATTENTION! recons: ", recons.shape, file=sys.stderr, flush=True)
 
             pred_masks = torch.squeeze(pred_masks)
             self.trainer.logger.experiment.log({
@@ -171,7 +171,7 @@ class SlotAttentionAE(pl.LightningModule):
             if self.dataset in ['clevr-tex', 'clevr']:
                 pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
                 true_masks = true_masks.view(*true_masks.shape[:2], -1)
-                print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
+                # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
                 self.log('ARI', adjusted_rand_index(true_masks.float().cpu(), pred_masks.float().cpu()).mean())
         return loss
 
