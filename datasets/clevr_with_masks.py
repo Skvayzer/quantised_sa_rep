@@ -84,7 +84,7 @@ class CLEVRwithMasks(Dataset):
             transformed_mask = torch.zeros((11, 1) + self.resize)
             for i in range(11):
                 transformed_mask[i] = self.mask_transform(mask[i])
-            mask = mask.float() / 255
+            transformed_mask = mask.float() / 255
         # print("\n\nATTENTION! item : ", self.masks[idx].shape, file=sys.stderr, flush=True)
 
         # print("\n\nATTENTION! clevr with masks image max/min: ", torch.max(image), torch.min(image), file=sys.stderr, flush=True)
@@ -92,6 +92,6 @@ class CLEVRwithMasks(Dataset):
 
         return {
             'image': image * 2 - 1,
-            'mask': mask if self.get_masks else [],
+            'mask': transformed_mask if self.get_masks else [],
             'visibility': visibility
         }
