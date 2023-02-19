@@ -32,17 +32,15 @@ class CLEVR_Mirror(Dataset):
 
         self.images = []
         self.scenes = []
-        # print("\n\nAAAAAAAAAAAAAAAAAinit\n\n", scenes_path, file=sys.stderr, flush=True)
 
         for f in os.listdir(scenes_path):
             with open(os.path.join(scenes_path, f), 'r') as file:
                 scene = json.load(file)
-                # print("\n\nAAAAAAAAAAAAAAAAAscene: ", scene, file=sys.stderr, flush=True)
                 if max_objs == None or len(scene['objects']) <= max_objs:
                     self.scenes.append(scene)
                     self.images.append(f.replace('.json', '.png'))
 
-        transform = [transforms.CenterCrop((256, 256))] if not get_target else []
+        transform = []
         self.transform = transforms.Compose(
             transform + [
                 transforms.Resize((128, 128)),
@@ -71,7 +69,6 @@ class CLEVR_Mirror(Dataset):
             while len(target) < self.max_objs:
                 target.append(torch.zeros(19))
             target = torch.stack(target)
-        # print("AAAAAAAAAAAAAAAAATARGET: ", target.shape, file=sys.stderr, flush=True)
         return {
             'image': img * 2 - 1,
             'target': target
