@@ -32,7 +32,7 @@ class SlotAttentionAE(pl.LightningModule):
                  nums=[8, 8, 8, 8],
                  beta=1,
                  lr=4e-4,
-                 num_steps=int(2*3e5), **kwargs
+                 num_steps=int(3e5), **kwargs
                  ):
         super().__init__()
         self.resolution = resolution
@@ -183,5 +183,5 @@ class SlotAttentionAE(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
-        scheduler = lr_scheduler.OneCycleLR(optimizer, max_lr=self.lr, total_steps=int(3e6), pct_start=0.05)
+        scheduler = lr_scheduler.OneCycleLR(optimizer, max_lr=self.lr, total_steps=int(self.num_steps), pct_start=0.05)
         return [optimizer], [scheduler]
