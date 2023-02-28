@@ -94,12 +94,15 @@ collation = None
 
 if dataset == 'clevr':
     #max 6 objects
-    if args.val_path != None:
-        val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
-    else:
-        val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
-                            scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
-                            max_objs=6)
+    # if args.val_path != None:
+    #     val_dataset = CLEVRwithMasks(os.path.join(args.val_path, 'clevr_with_masks_val.npz'), resize=(128, 128))
+    # else:
+    #     val_dataset = CLEVR(images_path=os.path.join(args.train_path, 'images', 'val'),
+    #                         scenes_path=os.path.join(args.train_path, 'scenes', 'CLEVR_val_scenes.json'),
+    #                         max_objs=6)
+    # train_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_6_train.npz'), resize=(128, 128))
+    val_dataset = CLEVRwithMasks(os.path.join(args.train_path, 'clevr_with_masks_6_val.npz'), resize=(128, 128),
+                                 get_masks=True)
 elif dataset == 'clevr-mirror':
     clevr_mirror = CLEVR_Mirror(images_path=os.path.join(args.train_path, 'images'),
                       scenes_path=os.path.join(args.train_path, 'scenes'),
@@ -197,7 +200,7 @@ wandb_logger.experiment.log({
                 'images': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(imgs, -1, 1)],
             })
 
-if args.dataset in ['clevr-tex', 'clevr'] and args.val_path is not None:
+if args.dataset in ['clevr-tex', 'clevr']:
     masks = batch['mask'].to(device)
     true_masks = masks[:, 1:num_slots, :, :]
 
@@ -214,7 +217,7 @@ wandb_logger.experiment.log({
                 f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
                 for i in range(1)
             })
-if args.dataset in ['clevr-tex', 'clevr'] and args.val_path is not None:
+if args.dataset in ['clevr-tex', 'clevr']:
     pred_masks = pred_masks.view(*pred_masks.shape[:2], -1)
     true_masks = true_masks.view(*true_masks.shape[:2], -1)
     # print("ATTENTION! MASKS (true/pred): ", true_masks.shape, pred_masks.shape, file=sys.stderr, flush=True)
