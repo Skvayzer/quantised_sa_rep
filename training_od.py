@@ -83,6 +83,9 @@ seed_everything(args.seed, workers=True)
 # ------------------------------------------------------------
 wandb.login(key='c84312b58e94070d15277f8a5d58bb72e57be7fd')
 
+
+print("\n\nCUDA: ", torch.cuda.is_available(), file=sys.stderr, flush=True)
+
 # ------------------------------------------------------------
 # Load dataset
 # ------------------------------------------------------------
