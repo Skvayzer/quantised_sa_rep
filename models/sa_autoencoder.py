@@ -169,13 +169,13 @@ class SlotAttentionAE(pl.LightningModule):
             #     })
 
             print(f"\n\n\nATTENTION!Logging {self.num_slots} slots: ", recons.shape, file=sys.stderr, flush=True)
-            self.trainer.logger.experiment.log({
-                f'{0} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, 0], -1, 1)]
-
-            })
-            for i in range(1, self.num_slots):
+            # self.trainer.logger.experiment.log({
+            #     f'{0} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, 0], -1, 1)]
+            #
+            # })
+            for i in range(self.num_slots):
                 print(f"\n\n\nATTENTION! {i} slot: ", recons[:, i], file=sys.stderr, flush=True)
-                self.trainer.logger.experiment.log({
+                wandb.log({
                     f'{i} slot': [wandb.Image(x / 2 + 0.5) for x in torch.clamp(recons[:, i], -1, 1)]
 
                 })
