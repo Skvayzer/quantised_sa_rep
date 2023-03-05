@@ -141,7 +141,7 @@ for name, l in data_dict.items():
   if name == 'train':
       np.savez(save_path, images=images[:count], visibility=visibility[:count])
   else:
-    np.savez(save_path, images=images[:count], masks=masks[:count], visibility=visibility[:count])
+      np.savez(save_path, images=images[:count], masks=masks[:count], visibility=visibility[:count])
   item = next(iter(ds))
 
 print("Done")
