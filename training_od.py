@@ -206,6 +206,10 @@ if args.pretrained:
     state_dict = torch.load(args.sa_state_dict)
     autoencoder.load_state_dict(state_dict=state_dict, strict=False)
 
+print(f"\n\nATTENTION! after load_dict: resolution: {autoencoder.resolution}, num_slots: {autoencoder.num_slots}, num_iter: {autoencoder.num_iters}, nums: {autoencoder.nums} ",
+      file=sys.stderr, flush=True)
+
+
 # ------------------------------------------------------------
 # Trainer
 # ------------------------------------------------------------
