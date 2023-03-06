@@ -7,7 +7,6 @@
 ##SBATCH --time=0-0:05:00
 #SBATCH --partition=DGX-1v100
 #SBATCH --gres=gpu:1
-#SBATCH --gpus-per-task=1
 #SBATCH --mem-per-gpu=16GB
 #SBATCH --mail-user=k.smirnov@innopolis.university
 #SBATCH --mail-type=END
